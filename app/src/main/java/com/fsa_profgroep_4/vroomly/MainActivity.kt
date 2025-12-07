@@ -16,6 +16,7 @@ import com.fsa_profgroep_4.vroomly.ui.theme.VroomlyTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         setContent {
             VroomlyTheme {
