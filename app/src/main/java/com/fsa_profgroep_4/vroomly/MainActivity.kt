@@ -4,45 +4,37 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.fsa_profgroep_4.vroomly.ui.theme.VroomlyTheme
+import androidx.navigation3.ui.NavDisplay
+import com.fsa_profgroep_4.vroomly.di.Navigator
+import org.koin.android.ext.android.inject
+import org.koin.android.scope.AndroidScopeComponent
+import org.koin.androidx.compose.navigation3.getEntryProvider
+import org.koin.androidx.scope.activityRetainedScope
+import org.koin.core.annotation.KoinExperimentalAPI
+import org.koin.core.scope.Scope
 
-class MainActivity : ComponentActivity() {
+@OptIn(KoinExperimentalAPI::class)
+class MainActivity : ComponentActivity(), AndroidScopeComponent {
+
+    override val scope : Scope by activityRetainedScope()
+    val navigator: Navigator by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
         setContent {
-            VroomlyTheme {
-                Scaffold( modifier = Modifier.fillMaxSize() ) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+            Scaffold { paddingValues ->
+                NavDisplay(
+                    backStack = navigator.backStack,
+                    modifier = Modifier.padding(paddingValues),
+                    onBack = { navigator.goBack() },
+                    entryProvider = getEntryProvider()
+                )
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    VroomlyTheme {
-        Greeting("Android")
     }
 }
