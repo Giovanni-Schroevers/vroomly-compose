@@ -12,16 +12,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80,
+    primary = Blue,
+    secondary = Orange,
+    tertiary = DarkBlue,
     background = Color(0xFF191970),
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
+    primary = Blue,
+    secondary = Orange,
+    tertiary = DarkBlue,
     background = Color(0xFFFFFBFE),
 
     /* Other default colors to override
@@ -43,10 +43,11 @@ fun VroomlyTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-      dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-        val context = LocalContext.current
-        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-      }
+//      @Todo: Nakijken wat dynamicColor doet en hoe we het zouden kunnen gebruiken
+//      dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+//        val context = LocalContext.current
+//        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+//      }
       darkTheme -> DarkColorScheme
       else -> LightColorScheme
     }
@@ -54,6 +55,6 @@ fun VroomlyTheme(
     MaterialTheme(
       colorScheme = colorScheme,
       typography = Typography,
-      content = content
+      content = content,
     )
 }

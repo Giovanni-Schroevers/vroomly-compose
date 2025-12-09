@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Vroomly</string>
-    <string name="welcome_to_vroomly">Welcome to Vroomly!</string>
+    <string name="welcome_to_vroomly">Welkom bij Vroomly!</string>
     <string name="slogan">Your car, their adventure</string>
     <string name="login">Login</string>
-    <string name="register">Register</string>
+    <string name="register">Registreren</string>
 </resources>

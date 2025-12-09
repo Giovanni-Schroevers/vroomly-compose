@@ -9,6 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation3.ui.NavDisplay
 import com.fsa_profgroep_4.vroomly.di.Navigator
+import com.fsa_profgroep_4.vroomly.ui.theme.VroomlyTheme
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.AndroidScopeComponent
 import org.koin.androidx.compose.navigation3.getEntryProvider
@@ -27,13 +28,15 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
 
         enableEdgeToEdge()
         setContent {
-            Scaffold { paddingValues ->
-                NavDisplay(
-                    backStack = navigator.backStack,
-                    modifier = Modifier.padding(paddingValues),
-                    onBack = { navigator.goBack() },
-                    entryProvider = getEntryProvider()
-                )
+            VroomlyTheme {
+                Scaffold { paddingValues ->
+                    NavDisplay(
+                        backStack = navigator.backStack,
+                        modifier = Modifier.padding(paddingValues),
+                        onBack = { navigator.goBack() },
+                        entryProvider = getEntryProvider()
+                    )
+                }
             }
         }
     }
