@@ -1,4 +1,4 @@
-package com.fsa_profgroep_4.vroomly.ui.loginScreen
+package com.fsa_profgroep_4.vroomly.ui.auth.login
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button

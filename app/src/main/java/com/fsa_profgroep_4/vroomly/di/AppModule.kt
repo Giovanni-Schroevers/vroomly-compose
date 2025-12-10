@@ -1,10 +1,12 @@
 package com.fsa_profgroep_4.vroomly.di
 
+import com.fsa_profgroep_4.vroomly.navigation.Navigator
+import com.fsa_profgroep_4.vroomly.navigation.Start
 import org.koin.androidx.scope.dsl.activityRetainedScope
 import org.koin.dsl.module
 
 val appModule = module {
-    includes(dataModule, viewModelModule, authModule)
+    includes(dataModule, authModule)
 
     activityRetainedScope {
         scoped {

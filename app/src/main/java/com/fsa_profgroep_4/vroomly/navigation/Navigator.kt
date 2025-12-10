@@ -1,4 +1,4 @@
-package com.fsa_profgroep_4.vroomly.di
+package com.fsa_profgroep_4.vroomly.navigation
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList

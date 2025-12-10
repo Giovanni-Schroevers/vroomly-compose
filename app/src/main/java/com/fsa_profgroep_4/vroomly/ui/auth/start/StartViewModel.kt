@@ -1,9 +1,8 @@
-package com.fsa_profgroep_4.vroomly.ui.startScreen
+package com.fsa_profgroep_4.vroomly.ui.auth.start
 
 import androidx.lifecycle.ViewModel
-import com.fsa_profgroep_4.vroomly.di.Navigator
-
-import com.fsa_profgroep_4.vroomly.di.Login
+import com.fsa_profgroep_4.vroomly.navigation.Navigator
+import com.fsa_profgroep_4.vroomly.navigation.Login
 
 class StartViewModel(private val navigator: Navigator) : ViewModel() {
     fun onLoginClicked() {
