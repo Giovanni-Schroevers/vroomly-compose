@@ -27,12 +27,6 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
-
-
-
-
-
-
         setContent {
             VroomlyTheme {
                 Scaffold { paddingValues ->
