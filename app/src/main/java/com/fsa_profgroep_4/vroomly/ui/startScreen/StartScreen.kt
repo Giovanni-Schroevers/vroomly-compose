@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,9 +20,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fsa_profgroep_4.vroomly.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun StartScreen() {
+fun StartScreen(viewModel: StartViewModel = koinViewModel()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -50,7 +50,7 @@ fun StartScreen() {
             fontSize = 12.sp,
         )
         Button(
-            onClick = {},
+            onClick = { viewModel.onLoginClicked() },
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .padding(top = 16.dp)
