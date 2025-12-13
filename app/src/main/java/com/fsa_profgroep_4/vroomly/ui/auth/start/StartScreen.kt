@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fsa_profgroep_4.vroomly.R
+import com.fsa_profgroep_4.vroomly.ui.components.VroomlyButton
+import com.fsa_profgroep_4.vroomly.ui.theme.spacing
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -28,7 +29,7 @@ fun StartScreen(viewModel: StartViewModel = koinViewModel()) {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp),
+            .padding(MaterialTheme.spacing.screenPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -41,7 +42,7 @@ fun StartScreen(viewModel: StartViewModel = koinViewModel()) {
         )
         Text(
             stringResource(R.string.welcome_to_vroomly),
-            fontSize = 24.sp,
+            fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
         )
         Text(
@@ -49,33 +50,20 @@ fun StartScreen(viewModel: StartViewModel = koinViewModel()) {
             fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp,
         )
-        Button(
+        VroomlyButton(
+            text = stringResource(R.string.login),
             onClick = { viewModel.onLoginClicked() },
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .padding(top = 16.dp)
-                .fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-            shape = MaterialTheme.shapes.medium
-        ) {
-            Text(
-                stringResource(R.string.login),
-                fontWeight = FontWeight.SemiBold,
-            )
-        }
-        Button(
+        )
+        VroomlyButton(
+            text = stringResource(R.string.register),
             onClick = {},
             modifier = Modifier
                 .padding(horizontal = 16.dp)
-                .padding(top = 8.dp)
-                .fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
-            shape = MaterialTheme.shapes.medium
-        ) {
-            Text(
-                stringResource(R.string.register),
-                fontWeight = FontWeight.SemiBold,
-            )
-        }
+                .padding(top = 8.dp),
+            containerColor = MaterialTheme.colorScheme.secondary
+        )
     }
 }

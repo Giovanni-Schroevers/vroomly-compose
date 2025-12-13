@@ -5,4 +5,5 @@
     <string name="slogan">Your car, their adventure</string>
     <string name="login">Login</string>
     <string name="register">Registreren</string>
+    <string name="back_button_text">Terug</string>
 </resources>

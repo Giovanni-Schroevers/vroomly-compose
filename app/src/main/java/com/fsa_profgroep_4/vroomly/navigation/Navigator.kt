@@ -11,6 +11,8 @@ class Navigator(startDestination: Any) {
     }
 
     fun goBack(){
-        backStack.removeLastOrNull()
+        if (backStack.size > 1) {
+            backStack.removeLastOrNull()
+        }
     }
 }
