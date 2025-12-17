@@ -1,8 +1,9 @@
-package com.fsa_profgroep_4.vroomly.ui.auth.login
+package com.fsa_profgroep_4.vroomly.ui.screens.auth.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fsa_profgroep_4.vroomly.data.auth.AuthRepository
+import com.fsa_profgroep_4.vroomly.navigation.Home
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -59,7 +60,7 @@ class LoginViewModel(
             val result = authRepository.login(email, password)
             result.onSuccess {
                 _uiState.value = currentState.copy(isLoading = false, isSuccess = true)
-                navigator.goTo(com.fsa_profgroep_4.vroomly.navigation.Home)
+                navigator.goTo(Home)
             }.onFailure { error ->
                 _uiState.value = currentState.copy(
                     isLoading = false,

@@ -1,4 +1,4 @@
-package com.fsa_profgroep_4.vroomly.ui.auth.home
+package com.fsa_profgroep_4.vroomly.ui.screens.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

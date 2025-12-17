@@ -1,4 +1,4 @@
-package com.fsa_profgroep_4.vroomly.ui.auth.start
+package com.fsa_profgroep_4.vroomly.ui.screens.auth.start
 
 import androidx.lifecycle.ViewModel
 import com.fsa_profgroep_4.vroomly.navigation.Navigator

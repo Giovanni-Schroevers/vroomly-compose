@@ -1,4 +1,4 @@
-package com.fsa_profgroep_4.vroomly.ui.auth.start
+package com.fsa_profgroep_4.vroomly.ui.screens.auth.start
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
