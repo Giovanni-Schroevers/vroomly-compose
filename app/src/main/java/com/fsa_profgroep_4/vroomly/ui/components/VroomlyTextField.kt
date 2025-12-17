@@ -18,6 +18,7 @@ fun VroomlyTextField(
     label: String,
     modifier: Modifier = Modifier,
     required: Boolean = false,
+    enabled: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     readOnly: Boolean = false,
@@ -40,6 +41,7 @@ fun VroomlyTextField(
             )
         },
         modifier = modifier,
+        enabled = enabled,
         keyboardOptions = keyboardOptions,
         visualTransformation = visualTransformation,
         readOnly = readOnly,

@@ -8,3 +8,6 @@ object Start : NavKey
 
 @Serializable
 object Login : NavKey
+
+@Serializable
+object Home : NavKey

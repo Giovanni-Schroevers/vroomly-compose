@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.apollo)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    id("kotlin-kapt")
 }
 
 android {
@@ -71,11 +72,17 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.androidx.material3.adaptive.navigation3)
     implementation(libs.kotlinx.serialization.core)
+
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.kotlinx.datetime)
 }
 
 apollo {
     service("service") {
         packageName.set("com.example.rocketreserver")
+        mapScalar("Date", "kotlinx.datetime.LocalDate")
         introspection {
             endpointUrl.set("https://dzxrnnq4til8g.cloudfront.net/graphql")
             schemaFile.set(file("src/main/graphql/schema.graphqls"))

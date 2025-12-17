@@ -1,7 +1,9 @@
 package com.fsa_profgroep_4.vroomly.di
 
+import com.fsa_profgroep_4.vroomly.navigation.Home
 import com.fsa_profgroep_4.vroomly.navigation.Login
 import com.fsa_profgroep_4.vroomly.navigation.Start
+import com.fsa_profgroep_4.vroomly.ui.auth.home.HomeScreen
 import com.fsa_profgroep_4.vroomly.ui.auth.login.LoginScreen
 import com.fsa_profgroep_4.vroomly.ui.auth.login.LoginViewModel
 import com.fsa_profgroep_4.vroomly.ui.auth.start.StartScreen
@@ -18,9 +20,10 @@ import org.koin.dsl.navigation3.navigation
 val authModule = module {
     activityRetainedScope {
         viewModel { StartViewModel(get()) }
-        viewModel { LoginViewModel(get()) }
+        viewModel { LoginViewModel(get(), get()) }
 
         navigation<Start> { StartScreen(viewModel = get()) }
         navigation<Login> { LoginScreen(viewModel = get()) }
+        navigation<Home> { HomeScreen() }
     }
 }
