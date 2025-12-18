@@ -1,7 +1,9 @@
 package com.fsa_profgroep_4.vroomly.ui.screens.auth.login
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fsa_profgroep_4.vroomly.R
 import com.fsa_profgroep_4.vroomly.data.auth.AuthRepository
 import com.fsa_profgroep_4.vroomly.navigation.Home
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
@@ -24,7 +26,8 @@ sealed class LoginUiState {
 
 class LoginViewModel(
     private val navigator: Navigator,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val application: Application
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState.Content())
@@ -43,8 +46,8 @@ class LoginViewModel(
         val email = currentState.email
         val password = currentState.password
 
-        val emailError = if (email.isBlank()) "Email is required" else null
-        val passwordError = if (password.isBlank()) "Password is required" else null
+        val emailError = if (email.isBlank()) application.getString(R.string.email_is_required) else null
+        val passwordError = if (password.isBlank()) application.getString(R.string.password_is_required) else null
 
         if (emailError != null || passwordError != null) {
             _uiState.value = currentState.copy(
@@ -56,15 +59,15 @@ class LoginViewModel(
         }
 
         viewModelScope.launch {
-            _uiState.value = currentState.copy(isLoading = true, emailError = null, passwordError = null, generalError = null)
+            _uiState.value = _uiState.value.copy(isLoading = true, emailError = null, passwordError = null, generalError = null)
             val result = authRepository.login(email, password)
             result.onSuccess {
-                _uiState.value = currentState.copy(isLoading = false, isSuccess = true)
+                _uiState.value = _uiState.value.copy(isLoading = false, isSuccess = true)
                 navigator.goTo(Home)
             }.onFailure { error ->
-                _uiState.value = currentState.copy(
+                _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    generalError = error.message?.split(" : ")?.last() ?: "Login failed"
+                    generalError = error.message?.split(" : ")?.last() ?: application.getString(R.string.login_failed)
                 )
             }
         }

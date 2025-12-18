@@ -1,8 +1,14 @@
 <resources>
     <string name="app_name">Vroomly</string>
     <string name="welcome_to_vroomly">Welcome to Vroomly!</string>
-    <string name="slogan">Your car, their adventure</string>
+    <string name="slogan" translatable="false">Your car, their adventure</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="back_button_text">Back</string>
+    <string name="email_is_required">Email is required</string>
+    <string name="password_is_required">Password is required</string>
+    <string name="login_failed">Login failed</string>
+    <string name="let_s_sign_you_in">Let’s sign you in.</string>
+    <string name="welcome_back_to_vroomly">Welcome back to Vroomly.</string>
+    <string name="hit_the_road_not_the_hassle" translatable="false">Hit the road. Not the hassle.</string>
 </resources>

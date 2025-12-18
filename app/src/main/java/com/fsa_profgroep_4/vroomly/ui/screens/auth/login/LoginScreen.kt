@@ -48,18 +48,18 @@ fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
                 )
 
                 Text(
-                    text = "Let’s sign you in.",
+                    text = stringResource(R.string.let_s_sign_you_in),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
                         .padding(bottom = MaterialTheme.spacing.small)
                 )
                 Text(
-                    text = "Welcome back to Vroomly.",
+                    text = stringResource(R.string.welcome_back_to_vroomly),
                     fontSize = 18.sp
                 )
                 Text(
-                    text = "Hit the road. Not the hassle.",
+                    text = stringResource(R.string.hit_the_road_not_the_hassle),
                     fontSize = 14.sp,
                     modifier = Modifier.padding(bottom = MaterialTheme.spacing.medium)
                 )

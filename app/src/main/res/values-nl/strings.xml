@@ -2,8 +2,12 @@
 <resources>
     <string name="app_name">Vroomly</string>
     <string name="welcome_to_vroomly">Welkom bij Vroomly!</string>
-    <string name="slogan">Your car, their adventure</string>
     <string name="login">Login</string>
     <string name="register">Registreren</string>
     <string name="back_button_text">Terug</string>
+    <string name="email_is_required">Email is verplicht</string>
+    <string name="password_is_required">Password is verplicht</string>
+    <string name="login_failed">Login mislukt</string>
+    <string name="let_s_sign_you_in">Laten we u aanmelden.</string>
+    <string name="welcome_back_to_vroomly">Welkom terug bij Vroomly.</string>
 </resources>
