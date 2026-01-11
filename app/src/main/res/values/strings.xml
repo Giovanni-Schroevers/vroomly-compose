@@ -28,4 +28,6 @@
     <string name="dob_is_required">Date of birth is required</string>
     <string name="username_is_required">Username is required</string>
     <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="select_date">Select Date</string>
+    <string name="cancel">Cancel</string>
 </resources>

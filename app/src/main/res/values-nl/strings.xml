@@ -26,4 +26,6 @@
     <string name="dob_is_required">Geboortedatum is verplicht</string>
     <string name="username_is_required">Gebruikersnaam is verplicht</string>
     <string name="passwords_do_not_match">Wachtwoord is verplicht</string>
+    <string name="select_date">Kies een datum</string>
+    <string name="cancel">Annuleren</string>
 </resources>

@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.fsa_profgroep_4.vroomly.R
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -45,7 +46,7 @@ fun VroomlyDatePickerField(
             trailingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_date_range),
-                    contentDescription = "Select Date"
+                    contentDescription = stringResource(R.string.select_date)
                 )
             }
         )
@@ -82,7 +83,7 @@ fun VroomlyDatePickerField(
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         ) {
