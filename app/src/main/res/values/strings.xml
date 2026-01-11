@@ -11,4 +11,21 @@
     <string name="let_s_sign_you_in">Let’s sign you in.</string>
     <string name="welcome_back_to_vroomly">Welcome back to Vroomly.</string>
     <string name="hit_the_road_not_the_hassle" translatable="false">Hit the road. Not the hassle.</string>
+    <string name="lets_get_started">Let\'s get started!</string>
+    <string name="lets_get_you_started_with_an_account">Let\'s get you started with an account.</string>
+    <string name="join_the_vroom_where_cars_move_people" translatable="false">Join the vroom - where cars move people.</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="firstname">Firstname</string>
+    <string name="middle_name">Middle name</string>
+    <string name="lastname">Lastname</string>
+    <string name="username">Username</string>
+    <string name="verify_password">Verify password</string>
+    <string name="date_of_birth">Date of birth</string>
+    <string name="registration_failed">Registration failed</string>
+    <string name="firstname_is_required">Firstname is required</string>
+    <string name="lastname_is_required">Lastname is required</string>
+    <string name="dob_is_required">Date of birth is required</string>
+    <string name="username_is_required">Username is required</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
 </resources>

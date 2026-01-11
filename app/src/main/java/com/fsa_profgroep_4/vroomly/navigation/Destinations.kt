@@ -10,4 +10,7 @@ object Start : NavKey
 object Login : NavKey
 
 @Serializable
+object Register : NavKey
+
+@Serializable
 object Home : NavKey

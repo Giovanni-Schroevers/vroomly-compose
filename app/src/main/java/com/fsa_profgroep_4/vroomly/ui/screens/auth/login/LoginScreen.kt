@@ -38,10 +38,14 @@ fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .padding(MaterialTheme.spacing.screenPadding),
+            .padding(horizontal = MaterialTheme.spacing.screenPadding),
         topBar = { VroomlyBackButton(onBackClicked = { viewModel.goBack() }) },
         content = { padding ->
-            Column(modifier = Modifier.padding(padding))  {
+            Column(
+                modifier = Modifier
+                    .padding(padding)
+                    .padding(bottom = MaterialTheme.spacing.screenPadding)
+            )  {
                 Image(
                     painter = painterResource(R.drawable.logo_small),
                     contentDescription = "Vroomly",
@@ -73,22 +77,22 @@ fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
                 }
 
                 VroomlyTextField(
-                    value = uiState.email,
+                    value = uiState.email.value,
                     onValueChange = { viewModel.onEmailChange(it) },
-                    label = "Email",
+                    label = stringResource(R.string.email),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = MaterialTheme.spacing.small),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     required = true,
                     enabled = !uiState.isLoading,
-                    errorText = uiState.emailError
+                    errorText = uiState.email.error
                 )
 
                 VroomlyTextField(
-                    value = uiState.password,
+                    value = uiState.password.value,
                     onValueChange = { viewModel.onPasswordChange(it) },
-                    label = "Password",
+                    label = stringResource(R.string.password),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = MaterialTheme.spacing.medium),
@@ -96,7 +100,7 @@ fun LoginScreen(viewModel: LoginViewModel = koinViewModel()) {
                     visualTransformation = PasswordVisualTransformation(),
                     required = true,
                     enabled = !uiState.isLoading,
-                    errorText = uiState.passwordError
+                    errorText = uiState.password.error
                 )
 
                 Box(contentAlignment = Alignment.Center) {

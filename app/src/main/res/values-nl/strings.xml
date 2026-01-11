@@ -10,4 +10,20 @@
     <string name="login_failed">Login mislukt</string>
     <string name="let_s_sign_you_in">Laten we u aanmelden.</string>
     <string name="welcome_back_to_vroomly">Welkom terug bij Vroomly.</string>
+    <string name="lets_get_started">Laten we beginnen!</string>
+    <string name="lets_get_you_started_with_an_account">Laten we je op weg helpen met een account.</string>
+    <string name="password">Wachtwoord</string>
+    <string name="email">E-mail</string>
+    <string name="firstname">Voornaam</string>
+    <string name="middle_name">Middelste naam</string>
+    <string name="lastname">Achternaam</string>
+    <string name="username">Gebruikersnaam</string>
+    <string name="verify_password">Wachtwoord verifiëren</string>
+    <string name="date_of_birth">Geboortedatum</string>
+    <string name="registration_failed">Registratie mislukt</string>
+    <string name="firstname_is_required">Voornaam is verplicht</string>
+    <string name="lastname_is_required">Achternaam is verplicht</string>
+    <string name="dob_is_required">Geboortedatum is verplicht</string>
+    <string name="username_is_required">Gebruikersnaam is verplicht</string>
+    <string name="passwords_do_not_match">Wachtwoord is verplicht</string>
 </resources>
