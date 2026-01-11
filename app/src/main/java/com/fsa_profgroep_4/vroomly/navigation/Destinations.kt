@@ -14,3 +14,7 @@ object Register : NavKey
 
 @Serializable
 object Home : NavKey
+
+@Serializable
+object Account : NavKey
+

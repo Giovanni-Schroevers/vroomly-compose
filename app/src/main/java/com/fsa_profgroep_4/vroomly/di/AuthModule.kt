@@ -11,6 +11,7 @@ import com.fsa_profgroep_4.vroomly.ui.screens.auth.register.RegisterScreen
 import com.fsa_profgroep_4.vroomly.ui.screens.auth.register.RegisterViewModel
 import com.fsa_profgroep_4.vroomly.ui.screens.auth.start.StartScreen
 import com.fsa_profgroep_4.vroomly.ui.screens.auth.start.StartViewModel
+import com.fsa_profgroep_4.vroomly.ui.screens.home.HomeViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.scope.dsl.activityRetainedScope
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -24,10 +25,11 @@ val authModule = module {
         viewModel { StartViewModel(get()) }
         viewModel { LoginViewModel(get(), get(), androidApplication()) }
         viewModel { RegisterViewModel(get(), get(), androidApplication()) }
+        viewModel { HomeViewModel(get()) }
 
         navigation<Start> { StartScreen(viewModel = get()) }
         navigation<Login> { LoginScreen(viewModel = get()) }
         navigation<Register> { RegisterScreen(viewModel = get()) }
-        navigation<Home> { HomeScreen() }
+        navigation<Home> { HomeScreen(viewModel = get()) }
     }
 }

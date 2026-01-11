@@ -1,4 +1,4 @@
-package com.fsa_profgroep_4.vroomly.ui.screens.home
+package com.fsa_profgroep_4.vroomly.ui.screens.account
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,16 +16,15 @@ import com.fsa_profgroep_4.vroomly.ui.components.VroomlyBottomBar
 import com.fsa_profgroep_4.vroomly.ui.theme.spacing
 
 @Composable
-fun HomeScreen(
+fun AccountScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel
+    viewModel: AccountViewModel
 ) {
-    var currentRoute by remember { mutableStateOf("home") }
+    var currentRoute by remember { mutableStateOf("account") }
 
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
-
         bottomBar = {
             VroomlyBottomBar(
                 currentRoute = currentRoute,
@@ -41,7 +40,7 @@ fun HomeScreen(
                     .padding(padding)
                     .padding(horizontal = MaterialTheme.spacing.screenPadding)
             ) {
-                Text("Home")
+                Text("Account")
             }
         }
     )
