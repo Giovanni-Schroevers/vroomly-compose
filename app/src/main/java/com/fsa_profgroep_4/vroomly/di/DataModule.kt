@@ -4,6 +4,8 @@ import androidx.room.Room
 import com.apollographql.apollo.ApolloClient
 import com.fsa_profgroep_4.vroomly.data.auth.AuthRepository
 import com.fsa_profgroep_4.vroomly.data.auth.AuthRepositoryImpl
+import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
+import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepositoryImpl
 import com.fsa_profgroep_4.vroomly.data.local.AppDatabase
 import com.fsa_profgroep_4.vroomly.data.adapter.DateAdapter
 import com.example.rocketreserver.type.Date
@@ -31,4 +33,5 @@ val dataModule = module {
     single { get<AppDatabase>().userDao() }
 
     singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
+    singleOf(::VehicleRepositoryImpl) { bind<VehicleRepository>() }
 }
