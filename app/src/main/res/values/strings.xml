@@ -30,4 +30,10 @@
     <string name="passwords_do_not_match">Passwords do not match</string>
     <string name="select_date">Select Date</string>
     <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="register_car_button">Register a car</string>
+    <string name="register_car_subtitle">Your vehicle to add onto the endless journeys.</string>
+    <string name="license_plate">License plate</string>
+    <string name="add_pictures">Add pictures</string>
+    <string name="enter_details">Enter details</string>
 </resources>

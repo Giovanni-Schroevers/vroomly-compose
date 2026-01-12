@@ -18,3 +18,6 @@ object Home : NavKey
 @Serializable
 object Account : NavKey
 
+@Serializable
+object RegisterCar : NavKey
+

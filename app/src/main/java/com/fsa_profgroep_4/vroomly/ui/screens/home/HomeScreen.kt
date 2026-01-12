@@ -12,7 +12,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.fsa_profgroep_4.vroomly.R
 import com.fsa_profgroep_4.vroomly.ui.components.VroomlyBottomBar
+import com.fsa_profgroep_4.vroomly.ui.components.VroomlyButton
 import com.fsa_profgroep_4.vroomly.ui.theme.spacing
 
 @Composable
@@ -42,6 +45,12 @@ fun HomeScreen(
                     .padding(horizontal = MaterialTheme.spacing.screenPadding)
             ) {
                 Text("Home")
+                // Temporary button to navigate to car register
+
+                VroomlyButton(
+                    text = stringResource(R.string.register_car_button),
+                    onClick = { viewModel.onRegisterCarClicked() }
+                )
             }
         }
     )
