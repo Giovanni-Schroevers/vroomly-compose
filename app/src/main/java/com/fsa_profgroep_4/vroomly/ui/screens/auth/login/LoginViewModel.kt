@@ -69,7 +69,7 @@ class LoginViewModel(
             )
             result.onSuccess {
                 _uiState.value = _uiState.value.copy(isLoading = false)
-                navigator.goTo(Home)
+                navigator.resetTo(Home)
             }.onFailure { error ->
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,

@@ -28,6 +28,12 @@
     <string name="passwords_do_not_match">Wachtwoord is verplicht</string>
     <string name="select_date">Kies een datum</string>
     <string name="cancel">Annuleren</string>
+    <string name="edit_profile">Profiel aanpassen</string>
+    <string name="save_changes">Aanpassingen opslaan</string>
+    <string name="logout">Uitloggen</string>
+    <string name="delete_account">Account verwijderen</string>
+    <string name="are_you_sure_you_want_to_delete_your_account_this_action_cannot_be_undone">Weet u zeker dat u uw account wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.</string>
+    <string name="delete">Verwijderen</string>
     <string name="gasoline">Benzine</string>
     <string name="diesel">Diesel</string>
     <string name="electric">Elektrisch</string>

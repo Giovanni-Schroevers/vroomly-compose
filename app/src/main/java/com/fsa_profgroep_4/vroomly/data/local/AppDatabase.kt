@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.fsa_profgroep_4.vroomly.data.local.vehicle.VehicleBasicEntity
 
-@Database(entities = [UserEntity::class, VehicleBasicEntity::class], version = 1, exportSchema = false)
+@Database(entities = [UserEntity::class, VehicleBasicEntity::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun vehicleDao(): VehicleDao

@@ -1,0 +1,25 @@
+mutation EditUser(
+    $firstname: String
+    $middleName: String
+    $lastname: String
+    $username: String
+    $dob: Date
+) {
+    editUser(input: {
+        firstname: $firstname
+        middleName: $middleName
+        lastname: $lastname
+        username: $username
+        dob: $dob
+    }) {
+        user {
+            id
+            firstname
+            middleName
+            lastname
+            email
+            username
+            dateOfBirth
+        }
+    }
+}

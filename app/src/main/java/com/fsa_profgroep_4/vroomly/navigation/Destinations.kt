@@ -19,4 +19,7 @@ object Home : NavKey
 object Account : NavKey
 
 @Serializable
+object AccountEdit : NavKey
+
+@Serializable
 object VehiclesOverview : NavKey

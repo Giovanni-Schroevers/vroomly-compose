@@ -7,7 +7,7 @@ import com.fsa_profgroep_4.vroomly.navigation.Navigator
 import com.fsa_profgroep_4.vroomly.navigation.VehiclesOverview
 
 abstract class BaseViewModel(
-    private val navigator: Navigator
+    protected val navigator: Navigator
 ) : ViewModel() {
 
     open fun onNavigate(route: String) {

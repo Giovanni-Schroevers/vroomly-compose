@@ -42,4 +42,10 @@
     <string name="sort_price_high_low">Price: High → Low</string>
     <string name="sort_stars_low_high">Reviews: Low → High</string>
     <string name="sort_stars_high_low">Reviews: High → Low</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="logout">Logout</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="are_you_sure_you_want_to_delete_your_account_this_action_cannot_be_undone">Are you sure you want to delete your account? This action cannot be undone.</string>
+    <string name="delete">Delete</string>
 </resources>
