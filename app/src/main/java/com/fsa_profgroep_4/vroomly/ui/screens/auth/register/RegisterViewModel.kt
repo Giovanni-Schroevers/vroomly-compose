@@ -108,7 +108,7 @@ class RegisterViewModel(
 
             result.onSuccess {
                 _uiState.value = _uiState.value.copy(isLoading = false)
-                navigator.goTo(Home)
+                navigator.resetTo(Home)
             }.onFailure { error ->
                 if (error is ValidationException) {
                     val currentState = _uiState.value

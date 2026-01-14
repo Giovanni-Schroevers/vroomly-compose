@@ -11,9 +11,9 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation3.ui.NavDisplay
 import com.fsa_profgroep_4.vroomly.navigation.Home
+import com.fsa_profgroep_4.vroomly.navigation.Start
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
 import com.fsa_profgroep_4.vroomly.ui.theme.VroomlyTheme
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.AndroidScopeComponent
@@ -38,14 +38,20 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
         splashScreen.setKeepOnScreenCondition { !isReady }
 
         lifecycleScope.launch {
-            val authState = mainViewModel.authState.first { it !is AuthState.Loading }
-            
-            if (authState is AuthState.Authenticated) {
-                navigator.backStack.clear()
-                navigator.backStack.add(Home)
-            }
+            mainViewModel.authState.collect { authState ->
+                if (authState is AuthState.Loading) return@collect
 
-            isReady = true
+                if (!isReady) {
+                    if (authState is AuthState.Authenticated) {
+                        navigator.resetTo(Home)
+                    }
+                    isReady = true
+                } else {
+                    if (authState is AuthState.Unauthenticated) {
+                        navigator.resetTo(Start)
+                    }
+                }
+            }
         }
 
         enableEdgeToEdge()

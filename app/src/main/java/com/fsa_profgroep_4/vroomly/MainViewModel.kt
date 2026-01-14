@@ -23,16 +23,16 @@ class MainViewModel(
 
     private fun checkAuthState() {
         viewModelScope.launch {
-            val user = userDao.getCurrentUser().first()
-            
-            _authState.value = when {
-                user == null -> AuthState.Unauthenticated
-                user.token.isBlank() -> AuthState.Unauthenticated
-                JwtUtils.isTokenExpired(user.token) -> {
-                    userDao.clearTable()
-                    AuthState.Unauthenticated
+            userDao.getCurrentUser().collect { user ->
+                _authState.value = when {
+                    user == null -> AuthState.Unauthenticated
+                    user.token.isBlank() -> AuthState.Unauthenticated
+                    JwtUtils.isTokenExpired(user.token) -> {
+                        userDao.clearTable()
+                        AuthState.Unauthenticated
+                    }
+                    else -> AuthState.Authenticated
                 }
-                else -> AuthState.Authenticated
             }
         }
     }

@@ -17,4 +17,9 @@ class Navigator(startDestination: Any) {
             backStack.removeLastOrNull()
         }
     }
+
+    fun resetTo(destination: Any) {
+        backStack.clear()
+        backStack.add(destination)
+    }
 }
