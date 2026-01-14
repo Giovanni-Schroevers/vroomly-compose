@@ -28,4 +28,9 @@
     <string name="passwords_do_not_match">Wachtwoord is verplicht</string>
     <string name="select_date">Kies een datum</string>
     <string name="cancel">Annuleren</string>
+    <string name="gasoline">Benzine</string>
+    <string name="diesel">Diesel</string>
+    <string name="electric">Elektrisch</string>
+    <string name="search">Zoeken...</string>
+    <string name="brand">Merk</string>
 </resources>

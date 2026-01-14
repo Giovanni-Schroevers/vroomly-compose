@@ -1,0 +1,14 @@
+query AvailableVehicles($paginationPage: Int!, $paginationAmount: Int!, $filters: VehicleFilterInput) {
+  searchVehicles(
+    filters: $filters
+    paginationPage: $paginationPage
+    paginationAmount: $paginationAmount
+  ) {
+    id
+    ownerId
+    brand
+    costPerDay
+    engineType
+    reviewStars
+  }
+}
