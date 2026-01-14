@@ -27,7 +27,7 @@ data class AccountEditUiState(
 
 class AccountEditViewModel(
     private val userRepository: UserRepository,
-    navigator: Navigator
+    private val navigator: Navigator
 ) : BaseViewModel(navigator) {
 
     private val _uiState = MutableStateFlow(AccountEditUiState())

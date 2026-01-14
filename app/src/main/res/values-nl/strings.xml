@@ -46,4 +46,10 @@
     <string name="sort_price_high_low">Prijs: Hoog → Laag</string>
     <string name="sort_stars_low_high">Reviews: Laag → Hoog</string>
     <string name="sort_stars_high_low">Reviews: Hoog → Laag</string>
+    <string name="save">Opslaan</string>
+    <string name="register_car_button">Registreer een auto</string>
+    <string name="register_car_subtitle">Jouw voertuig voor eindeloze ritten.</string>
+    <string name="license_plate">Kenteken</string>
+    <string name="add_pictures">Foto\'s toevoegen</string>
+    <string name="enter_details">Details invoeren</string>
 </resources>
