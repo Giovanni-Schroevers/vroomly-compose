@@ -51,11 +51,11 @@ class AuthRepositoryImpl(
                 UserEntity(
                     id = user.id,
                     email = user.email,
-                    firstName = user.firstname ?: "",
+                    firstName = user.firstname,
                     middleName = user.middleName,
-                    lastName = user.lastname ?: "",
-                    username = user.username ?: "",
-                    dateOfBirth = user.dateOfBirth?.toString() ?: "",
+                    lastName = user.lastname,
+                    username = user.username,
+                    dateOfBirth = user.dateOfBirth.toString(),
                     token = loginData.token
                 )
             )

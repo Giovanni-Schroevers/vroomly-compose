@@ -59,13 +59,13 @@ class AccountEditViewModel(
         it.copy(middleName = value, fieldErrors = it.fieldErrors - "middleName") 
     }
     fun onLastNameChange(value: String) = _uiState.update { 
-        it.copy(lastName = value, fieldErrors = it.fieldErrors - "lastname") 
+        it.copy(lastName = value, fieldErrors = it.fieldErrors - "lastname")
     }
     fun onUsernameChange(value: String) = _uiState.update { 
         it.copy(username = value, fieldErrors = it.fieldErrors - "username") 
     }
-    fun onDobChange(value: LocalDate?) = _uiState.update { 
-        it.copy(dob = value, fieldErrors = it.fieldErrors - "dob") 
+    fun onDobChange(value: String) = _uiState.update {
+        it.copy(dob = LocalDate.parse(value), fieldErrors = it.fieldErrors - "dob")
     }
 
     fun onSave() {

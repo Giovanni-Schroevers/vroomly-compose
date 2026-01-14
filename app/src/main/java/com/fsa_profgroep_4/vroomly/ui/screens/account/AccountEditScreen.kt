@@ -25,7 +25,6 @@ import com.fsa_profgroep_4.vroomly.ui.components.VroomlyButton
 import com.fsa_profgroep_4.vroomly.ui.components.VroomlyDatePickerField
 import com.fsa_profgroep_4.vroomly.ui.components.VroomlyTextField
 import com.fsa_profgroep_4.vroomly.ui.theme.spacing
-import kotlinx.datetime.LocalDate
 
 @Composable
 fun AccountEditScreen(
@@ -109,9 +108,7 @@ fun AccountEditScreen(
 
             VroomlyDatePickerField(
                 value = uiState.dob?.toString() ?: "",
-                onValueChange = { dateStr ->
-                    viewModel.onDobChange(try { LocalDate.parse(dateStr) } catch(e: Exception) { null })
-                },
+                onValueChange = { viewModel.onDobChange(it) },
                 label = stringResource(R.string.date_of_birth),
                 modifier = Modifier.fillMaxWidth(),
                 errorText = uiState.fieldErrors["dob"]
