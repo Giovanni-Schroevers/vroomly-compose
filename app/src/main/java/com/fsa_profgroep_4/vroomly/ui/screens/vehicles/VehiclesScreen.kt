@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -118,6 +119,7 @@ fun VehiclesOverviewScreen(
                     modifier = Modifier
                         .weight(1f)
                         .defaultMinSize(minHeight = 44.dp)
+                        .testTag("vehicle_search_field")
                 )
 
                 Image(
@@ -231,7 +233,10 @@ fun VehicleList(
             }
     }
 
-    LazyColumn(state = listState, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    LazyColumn(
+        state = listState,
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.testTag("vehicle_list")) {
         items(items) { VehicleListItem(data = it) }
 
         // footer spinner for pagination
@@ -240,6 +245,7 @@ fun VehicleList(
                 Box(
                     Modifier.fillMaxWidth().padding(16.dp),
                     contentAlignment = Alignment.Center
+
                 ) { CircularProgressIndicator() }
             }
         }
