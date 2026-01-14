@@ -33,4 +33,11 @@
     <string name="electric">Elektrisch</string>
     <string name="search">Zoeken...</string>
     <string name="brand">Merk</string>
+    <string name="reviews">Reviews</string>
+    <string name="price">Prijs</string>
+    <string name="sort">Sorteren</string>
+    <string name="sort_price_low_high">Prijs: Laag → Hoog</string>
+    <string name="sort_price_high_low">Prijs: Hoog → Laag</string>
+    <string name="sort_stars_low_high">Reviews: Laag → Hoog</string>
+    <string name="sort_stars_high_low">Reviews: Hoog → Laag</string>
 </resources>

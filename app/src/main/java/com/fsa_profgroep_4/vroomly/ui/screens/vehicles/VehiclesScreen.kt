@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.apollographql.apollo.api.Optional
 import com.example.rocketreserver.type.VehicleFilterInput
@@ -31,11 +33,13 @@ fun VehiclesOverviewScreen(
     val state by viewModel.uiState.collectAsState()
 
     var filtersOpen by remember { mutableStateOf(false) }
+    var sortMenuOpen by remember { mutableStateOf(false) }
 
     var model by remember { mutableStateOf("") }
     var brand by remember { mutableStateOf("") }
     var minCost by remember { mutableStateOf("") }
     var maxCost by remember { mutableStateOf("") }
+    var sortOption by remember { mutableStateOf(SortOption.NONE) }
 
     var displayItems by remember { mutableStateOf<List<VehicleCardUi>>(emptyList()) }
 
@@ -56,13 +60,27 @@ fun VehiclesOverviewScreen(
         displayItems = state.items
     }
 
-    val shownItems = remember(displayItems, model, brand) {
-        displayItems.filter { v ->
+    val minCostValue = minCost.toDoubleOrNull()
+    val maxCostValue = maxCost.toDoubleOrNull()
+
+    // Auto updating when typing
+    val shownItems = remember(displayItems, model, brand, minCostValue, maxCostValue, sortOption) {
+        val filtered = displayItems.filter { v ->
             (model.isBlank() || v.title.contains(model, ignoreCase = true)) &&
-                    (brand.isBlank() || v.title.contains(brand, ignoreCase = true))
+                    (brand.isBlank() || v.title.contains(brand, ignoreCase = true)) &&
+                    (minCostValue == null || v.costPerDay >= minCostValue) &&
+                    (maxCostValue == null || v.costPerDay <= maxCostValue)
+        }
+
+        // Sorting
+        when (sortOption) {
+            SortOption.NONE -> filtered
+            SortOption.PRICE_LOW_HIGH -> filtered.sortedBy { it.costPerDay }
+            SortOption.PRICE_HIGH_LOW -> filtered.sortedByDescending { it.costPerDay }
+            SortOption.STARS_LOW_HIGH -> filtered.sortedBy { it.badgeText.toDoubleOrNull() ?: 0.0 }
+            SortOption.STARS_HIGH_LOW -> filtered.sortedByDescending { it.badgeText.toDoubleOrNull() ?: 0.0 }
         }
     }
-
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -106,11 +124,30 @@ fun VehiclesOverviewScreen(
                     painter = painterResource(R.drawable.settings),
                     contentDescription = "Filters",
                     modifier = Modifier
-                        .size(32.dp)
+                        .size(width = 36.dp, height = 32.dp)
                         .clickable { filtersOpen = !filtersOpen }
                 )
             }
+            Box {
+                TextButton(onClick = { sortMenuOpen = true }) {
+                    Text(stringResource(sortOption.labelRes))
+                }
 
+                DropdownMenu(
+                    expanded = sortMenuOpen,
+                    onDismissRequest = { sortMenuOpen = false }
+                ) {
+                    SortOption.entries.forEach { opt ->
+                        DropdownMenuItem(
+                            text = { Text(stringResource(opt.labelRes)) },
+                            onClick = {
+                                sortOption = opt
+                                sortMenuOpen = false
+                            }
+                        )
+                    }
+                }
+            }
             if (filtersOpen) {
                 OutlinedTextField(
                     value = brand,
@@ -126,16 +163,26 @@ fun VehiclesOverviewScreen(
                     OutlinedTextField(
                         modifier = Modifier.weight(1f).defaultMinSize(minHeight = 44.dp),
                         value = minCost,
-                        onValueChange = { minCost = it },
+                        onValueChange = { input ->
+                            if (input.isEmpty() || input.matches(Regex("^\\d*(\\.\\d{0,2})?$"))) {
+                                minCost = input
+                            }
+                        },
                         placeholder = { Text("Min €") },
-                        singleLine = true
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
                     OutlinedTextField(
                         modifier = Modifier.weight(1f).defaultMinSize(minHeight = 44.dp),
                         value = maxCost,
-                        onValueChange = { maxCost = it },
+                        onValueChange = { input ->
+                            if (input.isEmpty() || input.matches(Regex("^\\d*(\\.\\d{0,2})?$"))) {
+                                maxCost = input
+                            }
+                        },
                         placeholder = { Text("Max €") },
-                        singleLine = true
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
                 }
             }
@@ -198,4 +245,15 @@ fun VehicleList(
         }
     }
 }
+
+enum class SortOption(val labelRes: Int) {
+    NONE(R.string.sort),
+    PRICE_LOW_HIGH(R.string.sort_price_low_high),
+    PRICE_HIGH_LOW(R.string.sort_price_high_low),
+    STARS_LOW_HIGH(R.string.sort_stars_low_high),
+    STARS_HIGH_LOW(R.string.sort_stars_high_low)
+}
+
+
+
 

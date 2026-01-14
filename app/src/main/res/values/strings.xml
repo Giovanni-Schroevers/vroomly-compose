@@ -35,4 +35,11 @@
     <string name="electric">Electric</string>
     <string name="search">Search...</string>
     <string name="brand">Brand</string>
+    <string name="reviews">Reviews</string>
+    <string name="price">Price</string>
+    <string name="sort">Sort</string>
+    <string name="sort_price_low_high">Price: Low → High</string>
+    <string name="sort_price_high_low">Price: High → Low</string>
+    <string name="sort_stars_low_high">Reviews: Low → High</string>
+    <string name="sort_stars_high_low">Reviews: High → Low</string>
 </resources>
