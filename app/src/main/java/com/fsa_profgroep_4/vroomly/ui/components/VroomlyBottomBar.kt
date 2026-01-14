@@ -10,6 +10,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.fsa_profgroep_4.vroomly.R
@@ -70,6 +71,7 @@ fun VroomlyBottomBar(
                 NavigationBarItem(
                     selected = false,
                     onClick = { /* Logo doesn't navigate */ },
+                    modifier = Modifier.testTag("bottom_nav_logo"),
                     icon = {
                         Image(
                             painter = painterResource(id = R.drawable.logo_small),
@@ -86,10 +88,11 @@ fun VroomlyBottomBar(
             } else {
                 val isSelected = currentRoute == item.route
                 val iconRes = if (isSelected) item.selectedIconRes!! else item.unselectedIconRes!!
-                
+
                 NavigationBarItem(
                     selected = isSelected,
                     onClick = { onNavigate(item.route) },
+                    modifier = Modifier.testTag("bottom_nav_${item.route}"),
                     icon = {
                         Icon(
                             painter = painterResource(id = iconRes),
