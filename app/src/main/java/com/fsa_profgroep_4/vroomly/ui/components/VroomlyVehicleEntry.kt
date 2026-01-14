@@ -115,7 +115,7 @@ fun VehicleListItem(
                 )
                 Spacer(Modifier.height(3.dp))
                 ChipPillSmall(
-                    text = data.badgeText,
+                    text = data.badgeText + "★",
                     bg = Color(0xFF3DA5FF),
                     fg = Color(0xFF06131C)
                 )
