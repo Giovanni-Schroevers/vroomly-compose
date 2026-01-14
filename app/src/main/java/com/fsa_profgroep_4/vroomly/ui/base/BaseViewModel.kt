@@ -4,18 +4,19 @@ import androidx.lifecycle.ViewModel
 import com.fsa_profgroep_4.vroomly.navigation.Account
 import com.fsa_profgroep_4.vroomly.navigation.Home
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
+import com.fsa_profgroep_4.vroomly.navigation.VehiclesOverview
 
 abstract class BaseViewModel(
-    protected val navigator: Navigator
+    protected open val navigator: Navigator
 ) : ViewModel() {
 
     open fun onNavigate(route: String) {
         when (route) {
             "home" -> navigator.goTo(Home)
             "account" -> navigator.goTo(Account)
-            // @TODO: Add other routes here as they are implemented
-            // "search" -> navigator.goTo(Search)
-            // "reservations" -> navigator.goTo(Reservations)
+            "search" -> navigator.goTo(VehiclesOverview)
+            // TODO: Add final navigation
+            // "reservation" -> navigator.goTo(Reservations)
         }
     }
 }

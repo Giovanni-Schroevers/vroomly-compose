@@ -7,6 +7,8 @@ import com.fsa_profgroep_4.vroomly.data.auth.AuthRepositoryImpl
 import com.fsa_profgroep_4.vroomly.data.local.AppDatabase
 import com.fsa_profgroep_4.vroomly.data.adapter.DateAdapter
 import com.example.rocketreserver.type.Date
+import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
+import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepositoryImpl
 import com.fsa_profgroep_4.vroomly.data.network.AuthorizationInterceptor
 import com.fsa_profgroep_4.vroomly.data.network.ApolloAuthorizationInterceptor
 import com.fsa_profgroep_4.vroomly.data.local.UserDao
@@ -37,7 +39,9 @@ val dataModule = module {
     }
 
     single { get<AppDatabase>().userDao() }
+    single { get<AppDatabase>().vehicleDao() }
 
     singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
     singleOf(::UserRepositoryImpl) { bind<UserRepository>() }
+    singleOf(::VehicleRepositoryImpl) { bind<VehicleRepository>() }
 }
