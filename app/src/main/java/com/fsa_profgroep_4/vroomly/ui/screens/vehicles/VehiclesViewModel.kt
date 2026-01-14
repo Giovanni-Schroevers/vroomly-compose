@@ -18,7 +18,7 @@ data class VehiclesUiState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val page: Int = 1,
-    val pageSize: Int = 25,
+    val pageSize: Int = 10,
     val filters: Optional<VehicleFilterInput> = Optional.Absent,
     val hasMore: Boolean = false
 )
