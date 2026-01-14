@@ -21,6 +21,7 @@ import com.example.rocketreserver.type.VehicleFilterInput
 import com.fsa_profgroep_4.vroomly.R
 import com.fsa_profgroep_4.vroomly.ui.components.VehicleCardUi
 import com.fsa_profgroep_4.vroomly.ui.components.VehicleListItem
+import com.fsa_profgroep_4.vroomly.ui.components.VroomlyBackButton
 import com.fsa_profgroep_4.vroomly.ui.components.VroomlyBottomBar
 
 import org.koin.androidx.compose.koinViewModel
@@ -84,6 +85,11 @@ fun VehiclesOverviewScreen(
     }
 
     Scaffold(
+        topBar = {
+            VroomlyBackButton(
+                onBackClicked = { viewModel.onCancel() }
+            )
+        },
         modifier = modifier.fillMaxSize(),
         bottomBar = {
             VroomlyBottomBar(
@@ -105,12 +111,6 @@ fun VehiclesOverviewScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Image(
-                    painter = painterResource(R.drawable.ic_back),
-                    contentDescription = "Back",
-                    modifier = Modifier.size(32.dp).clickable { viewModel.goBack() }
-                )
-
                 OutlinedTextField(
                     value = model,
                     onValueChange = { model = it },

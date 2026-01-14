@@ -71,5 +71,7 @@ class VehiclesViewModel(
         }
     }
 
-    fun goBack() = navigator.goBack()
+    fun onCancel() {
+        navigator.goBack()
+    }
 }
