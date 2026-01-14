@@ -24,7 +24,7 @@ data class VehiclesUiState(
 )
 
 class VehiclesViewModel(
-    private val navigator: Navigator,
+    override val navigator: Navigator,
     private val vehicleRepository: VehicleRepository,
     private val application: Application
 ) : BaseViewModel(navigator) {
@@ -34,11 +34,6 @@ class VehiclesViewModel(
 
     init {
         loadFirstPage()
-    }
-
-    fun setFilters(newFilters: Optional<VehicleFilterInput>) {
-        _uiState.value = _uiState.value.copy(filters = newFilters, page = 1)
-        loadPage(append = false)
     }
 
     fun loadFirstPage() {
