@@ -20,6 +20,7 @@ import java.text.NumberFormat
 import java.util.Locale
 
 data class VehicleCardUi(
+    val vehicleId: Int,
     val imageUrl: String,
     val title: String,
     val location: String,

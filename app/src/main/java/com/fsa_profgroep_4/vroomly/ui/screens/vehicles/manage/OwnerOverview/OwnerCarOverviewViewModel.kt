@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.fsa_profgroep_4.vroomly.data.user.UserRepository
 import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
+import com.fsa_profgroep_4.vroomly.navigation.OwnerCarDetail
 import com.fsa_profgroep_4.vroomly.navigation.RegisterCar
 import com.fsa_profgroep_4.vroomly.ui.base.BaseViewModel
 import com.fsa_profgroep_4.vroomly.ui.components.VehicleCardUi
@@ -63,6 +64,10 @@ class OwnerCarOverviewViewModel(
 
     fun onRegisterCar() {
         navigator.goTo(RegisterCar)
+    }
+
+    fun onCarClicked(vehicleId: Int) {
+        navigator.goTo(OwnerCarDetail(vehicleId))
     }
 
     fun onBackClicked() {

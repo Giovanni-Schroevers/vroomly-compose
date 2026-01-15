@@ -1,0 +1,8 @@
+mutation DeleteVehicle($vehicleId: Int!) {
+    deleteVehicle(vehicleId: $vehicleId) {
+        id
+        licensePlate
+        brand
+        model
+    }
+}
