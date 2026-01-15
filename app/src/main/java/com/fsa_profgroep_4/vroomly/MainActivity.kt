@@ -6,6 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
@@ -34,6 +40,9 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+        if (savedInstanceState != null) {
+            isReady = true
+        }
 
         splashScreen.setKeepOnScreenCondition { !isReady }
 
@@ -56,14 +65,31 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
 
         enableEdgeToEdge()
         setContent {
-            VroomlyTheme {
-                Scaffold { paddingValues ->
-                    NavDisplay(
-                        backStack = navigator.backStack,
-                        modifier = Modifier.padding(paddingValues),
-                        onBack = { navigator.goBack() },
-                        entryProvider = getEntryProvider()
-                    )
+            val authState by mainViewModel.authState.collectAsState()
+            var hasCompletedInitialLoad by rememberSaveable { mutableStateOf(false) }
+
+            if (!hasCompletedInitialLoad) {
+                val currentDest = navigator.backStack.lastOrNull()
+                val isReady = when (authState) {
+                    is AuthState.Loading -> false
+                    is AuthState.Authenticated -> currentDest == Home
+                    is AuthState.Unauthenticated -> currentDest == Start
+                }
+                if (isReady) {
+                    hasCompletedInitialLoad = true
+                }
+            }
+
+            if (hasCompletedInitialLoad) {
+                VroomlyTheme {
+                    Scaffold { paddingValues ->
+                        NavDisplay(
+                            backStack = navigator.backStack,
+                            modifier = Modifier.padding(paddingValues),
+                            onBack = { navigator.goBack() },
+                            entryProvider = getEntryProvider()
+                        )
+                    }
                 }
             }
         }
