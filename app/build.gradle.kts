@@ -87,9 +87,11 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.androidx.material3.adaptive.navigation3)
     implementation(libs.kotlinx.serialization.core)
-
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.maplibre.composeMaterial3)
+    implementation(libs.maplibre.compose)
+
     kapt(libs.androidx.room.compiler)
     implementation(libs.kotlinx.datetime)
     implementation("io.coil-kt:coil-compose:2.6.0")
