@@ -106,7 +106,10 @@ fun OwnerCarOverviewScreen(
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         items(uiState.items) { vehicle ->
-                            VehicleListItem(data = vehicle)
+                            VehicleListItem(
+                                data = vehicle,
+                                onClick = { viewModel.onCarClicked(vehicle.vehicleId) }
+                            )
                         }
                     }
                 }
