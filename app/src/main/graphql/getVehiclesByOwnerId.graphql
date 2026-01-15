@@ -1,0 +1,14 @@
+query GetVehiclesByOwnerId($ownerId: Int!) {
+    getVehiclesByOwnerId(ownerId: $ownerId) {
+        id
+        brand
+        model
+        costPerDay
+        engineType
+        ownerId
+        reviewStars
+        location {
+            address
+        }
+    }
+}
