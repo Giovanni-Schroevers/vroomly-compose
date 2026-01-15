@@ -2,6 +2,7 @@ package com.fsa_profgroep_4.vroomly.ui.screens.reservation.overview
 
 import android.app.Application
 import androidx.lifecycle.viewModelScope
+import com.example.rocketreserver.GetVehicleByIdQuery
 import com.fsa_profgroep_4.vroomly.data.local.ReservationEntity
 import com.fsa_profgroep_4.vroomly.data.reservation.ReservationRepository
 import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
@@ -38,20 +39,23 @@ class ReservationViewModel(
             reservationRepository.getReservationsByRenterId(1)
                 .collect { reservations ->
                     val items = reservations.map { reservation ->
-                        val vehicle = vehicleRepository
+                        var vehicle = vehicleRepository
                             .getVehicleById(reservation.vehicleId)
-                            .getOrElse {
-                                VehicleCardUi(
-                                    imageUrl = "",
-                                    title = "Unknown vehicle",
-                                    location = "-",
-                                    owner = "-",
-                                    tagText = "",
-                                    badgeText = "",
-                                    costPerDay = 0.0
-                                )
-                            }
+                            .getOrNull()
+                            ?.toVehicleCardUi()
 
+                        if (vehicle == null){
+                            vehicle = VehicleCardUi(
+                                vehicleId = 0,
+                                imageUrl = "",
+                                title = "Unknown vehicle",
+                                location = "-",
+                                owner = "-",
+                                tagText = "",
+                                badgeText = "",
+                                costPerDay = 0.0
+                            )
+                        }
                         reservation.toCardData(vehicle)
                     }
 
@@ -62,6 +66,7 @@ class ReservationViewModel(
                 }
         }
     }
+
     fun onCancel() {
         navigator.goBack()
     }
@@ -77,3 +82,14 @@ private fun ReservationEntity.toCardData(vehicle: VehicleCardUi): ReservationCar
         location = vehicle.location,
         vehicleId = vehicleId,
     )
+
+private fun GetVehicleByIdQuery.GetVehicleById.toVehicleCardUi() = VehicleCardUi(
+    vehicleId = requireNotNull(id),
+    imageUrl = images.firstOrNull()?.url ?: "",
+    title = "$brand $model",
+    location = location.address,
+    owner = "Owner #${ownerId}",
+    tagText = engineType.name,
+    badgeText = reviewStars.toString(),
+    costPerDay = costPerDay
+)

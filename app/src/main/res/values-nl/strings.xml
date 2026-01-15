@@ -83,4 +83,10 @@
     <string name="add_image">Afbeelding toevoegen</string>
     <string name="manage_my_cars">Beheer mijn auto\'s</string>
     <string name="no_cars_registered">Nog geen auto\'s geregistreerd</string>
+    <string name="reservations">Reserveringen</string>
+    <string name="no_reservations">Nog geen reserveringen</string>
+    <string name="vehicle_details">Voertuiggegevens</string>
+    <string name="status">Status</string>
+    <string name="delete_vehicle">Voertuig verwijderen</string>
+    <string name="delete_vehicle_confirmation">Weet u zeker dat u dit voertuig wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.</string>
 </resources>

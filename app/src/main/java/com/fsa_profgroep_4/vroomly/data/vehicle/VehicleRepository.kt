@@ -6,6 +6,8 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.example.rocketreserver.AvailableVehiclesQuery
 import com.example.rocketreserver.CreateVehicleQuery
+import com.example.rocketreserver.DeleteVehicleMutation
+import com.example.rocketreserver.GetReservationsByVehicleIdQuery
 import com.example.rocketreserver.GetVehicleByIdQuery
 import com.example.rocketreserver.GetVehiclesByOwnerIdQuery
 import com.example.rocketreserver.type.EngineType
@@ -25,6 +27,8 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import kotlin.system.measureTimeMillis
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 
 interface VehicleRepository {
     suspend fun searchVehicles(
@@ -35,7 +39,9 @@ interface VehicleRepository {
 
     suspend fun getVehiclesByOwnerId(ownerId: Int): Result<List<VehicleCardUi>>
 
-    suspend fun getVehicleById(vehicleId: Int): Result<VehicleCardUi>
+    suspend fun getVehicleById(vehicleId: Int): Result<GetVehicleByIdQuery.GetVehicleById>
+
+    suspend fun getReservationsByVehicleId(vehicleId: Int): Result<List<GetReservationsByVehicleIdQuery.GetReservationsByVehicleId>>
 
     suspend fun createVehicle(
         licensePlate: String,
@@ -55,6 +61,8 @@ interface VehicleRepository {
         latitude: Double,
         longitude: Double
     ): Result<CreateVehicleQuery.CreateVehicle>
+
+    suspend fun deleteVehicleById(vehicleId: Int): Result<DeleteVehicleMutation.DeleteVehicle>
 }
 
 private const val TAG = "VehicleRepository"
@@ -111,6 +119,7 @@ class VehicleRepositoryImpl(
                         // Always use cache if present even when it's "error"
                         imageUrlCache[id]?.let { cached ->
                             return@async VehicleCardUi(
+                                vehicleId = id,
                                 imageUrl = cached,
                                 title = vehicle.brand,
                                 location = "-",
@@ -126,6 +135,7 @@ class VehicleRepositoryImpl(
                             val placeholder = "error"
                             imageUrlCache[id] = placeholder // cache miss as well
                             return@async VehicleCardUi(
+                                vehicleId = id,
                                 imageUrl = placeholder,
                                 title = vehicle.brand,
                                 location = "-",
@@ -158,6 +168,7 @@ class VehicleRepositoryImpl(
                         imageUrlCache[id] = imageUrl
 
                         VehicleCardUi(
+                            vehicleId = id,
                             imageUrl = imageUrl,
                             title = vehicle.brand,
                             location = details?.location?.address ?: "-",
@@ -195,8 +206,10 @@ class VehicleRepositoryImpl(
 
             val vehicles = response.data?.getVehiclesByOwnerId.orEmpty()
 
-            vehicles.map { vehicle ->
+            vehicles.mapNotNull { vehicle ->
+                val id = vehicle.id ?: return@mapNotNull null
                 VehicleCardUi(
+                    vehicleId = id,
                     imageUrl = "error",
                     title = "${vehicle.brand} ${vehicle.model}",
                     location = vehicle.location?.address ?: "-",
@@ -208,6 +221,38 @@ class VehicleRepositoryImpl(
             }
         }.also { r ->
             r.onFailure { e -> Log.e(TAG, "getVehiclesByOwnerId failed", e) }
+        }
+    }
+
+    override suspend fun getVehicleById(vehicleId: Int): Result<GetVehicleByIdQuery.GetVehicleById> {
+        return runCatching {
+            val response = withContext(Dispatchers.IO) {
+                apolloClient.query(GetVehicleByIdQuery(vehicleId = vehicleId)).execute()
+            }
+
+            if (response.hasErrors()) {
+                throw Exception(response.errors?.firstOrNull()?.message ?: "Unknown error")
+            }
+
+            response.data?.getVehicleById ?: throw Exception("Vehicle not found")
+        }.also { r ->
+            r.onFailure { e -> Log.e(TAG, "getVehicleById failed", e) }
+        }
+    }
+
+    override suspend fun getReservationsByVehicleId(vehicleId: Int): Result<List<GetReservationsByVehicleIdQuery.GetReservationsByVehicleId>> {
+        return runCatching {
+            val response = withContext(Dispatchers.IO) {
+                apolloClient.query(GetReservationsByVehicleIdQuery(vehicleId = vehicleId)).execute()
+            }
+
+            if (response.hasErrors()) {
+                throw Exception(response.errors?.firstOrNull()?.message ?: "Unknown error")
+            }
+
+            response.data?.getReservationsByVehicleId.orEmpty()
+        }.also { r ->
+            r.onFailure { e -> Log.e(TAG, "getReservationsByVehicleId failed", e) }
         }
     }
 
@@ -282,29 +327,19 @@ class VehicleRepositoryImpl(
         }
     }
 
-    override suspend fun getVehicleById(vehicleId: Int): Result<VehicleCardUi> {
+    override suspend fun deleteVehicleById(vehicleId: Int): Result<DeleteVehicleMutation.DeleteVehicle> {
         return runCatching {
-        val response = withContext(Dispatchers.IO) {
-            apolloClient.query(GetVehicleByIdQuery(vehicleId = vehicleId)).execute()
-        }
+            val response = withContext(Dispatchers.IO) {
+                apolloClient.mutation(DeleteVehicleMutation(vehicleId = vehicleId)).execute()
+            }
 
-        if (response.hasErrors()) {
-            throw Exception(response.errors?.firstOrNull()?.message ?: "Unknown error")
-        }
+            if (response.hasErrors()) {
+                throw Exception(response.errors?.firstOrNull()?.message ?: "Unknown error")
+            }
 
-        val vehicle = response.data?.getVehicleById
-
-         VehicleCardUi(
-            imageUrl = "error",
-            title = "${vehicle?.brand} ${vehicle?.model}",
-            location = vehicle?.location?.address ?: "-",
-            owner = "Owner #${vehicle?.ownerId}",
-            tagText = vehicle?.engineType?.name ?: "",
-            badgeText = vehicle?.reviewStars.toString(),
-            costPerDay = vehicle?.costPerDay ?: 0.0
-        )
+            response.data?.deleteVehicle ?: throw Exception("Failed to delete vehicle")
         }.also { r ->
-            r.onFailure { e -> Log.e(TAG, "getVehicleById failed", e) }
+            r.onFailure { e -> Log.e(TAG, "deleteVehicleById failed", e) }
         }
     }
 }

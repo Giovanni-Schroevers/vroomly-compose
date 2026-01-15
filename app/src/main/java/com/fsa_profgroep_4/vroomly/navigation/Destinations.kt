@@ -32,3 +32,6 @@ object OwnerCarOverview : NavKey
 
 @Serializable
 object ReservationsOverview : NavKey
+
+@Serializable
+data class OwnerCarDetail(val vehicleId: Int) : NavKey
