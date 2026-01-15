@@ -7,6 +7,7 @@ import com.apollographql.apollo.api.Optional
 import com.example.rocketreserver.AvailableVehiclesQuery
 import com.example.rocketreserver.CreateVehicleQuery
 import com.example.rocketreserver.GetVehicleByIdQuery
+import com.example.rocketreserver.GetVehiclesByOwnerIdQuery
 import com.example.rocketreserver.type.EngineType
 import com.example.rocketreserver.type.VehicleCategory
 import com.example.rocketreserver.type.VehicleFilterInput
@@ -33,6 +34,8 @@ interface VehicleRepository {
         paginationAmount: Int,
         paginationPage: Int
     ): Result<List<VehicleCardUi>>
+
+    suspend fun getVehiclesByOwnerId(ownerId: Int): Result<List<VehicleCardUi>>
 
     suspend fun createVehicle(
         licensePlate: String,
@@ -178,6 +181,34 @@ class VehicleRepositoryImpl(
             r.onFailure { e -> Log.e(TAG, "searchVehicles failed", e) }
         }
 
+    }
+
+    override suspend fun getVehiclesByOwnerId(ownerId: Int): Result<List<VehicleCardUi>> {
+        return runCatching {
+            val response = withContext(Dispatchers.IO) {
+                apolloClient.query(GetVehiclesByOwnerIdQuery(ownerId = ownerId)).execute()
+            }
+
+            if (response.hasErrors()) {
+                throw Exception(response.errors?.firstOrNull()?.message ?: "Unknown error")
+            }
+
+            val vehicles = response.data?.getVehiclesByOwnerId.orEmpty()
+
+            vehicles.map { vehicle ->
+                VehicleCardUi(
+                    imageUrl = "error",
+                    title = "${vehicle.brand} ${vehicle.model}",
+                    location = vehicle.location?.address ?: "-",
+                    owner = "Owner #${vehicle.ownerId}",
+                    tagText = vehicle.engineType.name,
+                    badgeText = vehicle.reviewStars.toString(),
+                    costPerDay = vehicle.costPerDay
+                )
+            }
+        }.also { r ->
+            r.onFailure { e -> Log.e(TAG, "getVehiclesByOwnerId failed", e) }
+        }
     }
 
     override suspend fun createVehicle(

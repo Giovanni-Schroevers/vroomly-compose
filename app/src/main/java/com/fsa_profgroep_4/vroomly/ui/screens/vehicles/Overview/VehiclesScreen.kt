@@ -1,4 +1,4 @@
-package com.fsa_profgroep_4.vroomly.ui.screens.vehicles
+package com.fsa_profgroep_4.vroomly.ui.screens.vehicles.Overview
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

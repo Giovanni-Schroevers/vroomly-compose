@@ -82,4 +82,5 @@
     <string name="no_images">Geen afbeeldingen</string>
     <string name="add_image">Afbeelding toevoegen</string>
     <string name="manage_my_cars">Beheer mijn auto\'s</string>
+    <string name="no_cars_registered">Nog geen auto\'s geregistreerd</string>
 </resources>
