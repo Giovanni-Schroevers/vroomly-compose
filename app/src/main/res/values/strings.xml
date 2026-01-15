@@ -81,4 +81,7 @@
     <string name="vehicle_registration_failed">Vehicle registration failed</string>
     <string name="select_category">Select category</string>
     <string name="select_engine_type">Select engine type</string>
+    <string name="no_images">No images</string>
+    <string name="add_image">Add image</string>
+    <string name="manage_my_cars">Manage my cars</string>
 </resources>

@@ -121,6 +121,13 @@ fun AccountScreen(
                         )
 
                         VroomlyButton(
+                            text = stringResource(R.string.manage_my_cars),
+                            onClick = { viewModel.onManageCars() },
+                            modifier = Modifier.fillMaxWidth(),
+                            leadingIcon = { Icon(painterResource(id = R.drawable.ic_directions_car), contentDescription = null) }
+                        )
+
+                        VroomlyButton(
                             text = stringResource(R.string.logout),
                             onClick = { viewModel.onLogout() },
                             modifier = Modifier.fillMaxWidth(),
