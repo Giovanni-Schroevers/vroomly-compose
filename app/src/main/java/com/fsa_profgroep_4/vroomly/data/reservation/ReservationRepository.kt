@@ -66,7 +66,6 @@ class ReservationRepositoryImpl(
     override fun getReservation(reservationId: Int): Flow<ReservationEntity?> {
         return reservationDao.observeById(reservationId)
             .onStart {
-                // cache-first: if missing locally, fetch once
                 val local = withContext(Dispatchers.IO) { reservationDao.getById(reservationId) }
                 if (local == null) {
                     withContext(Dispatchers.IO) {

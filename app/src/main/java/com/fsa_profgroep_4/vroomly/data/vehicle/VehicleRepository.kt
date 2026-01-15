@@ -25,8 +25,6 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import kotlin.system.measureTimeMillis
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withContext
 
 interface VehicleRepository {
     suspend fun searchVehicles(
@@ -36,6 +34,8 @@ interface VehicleRepository {
     ): Result<List<VehicleCardUi>>
 
     suspend fun getVehiclesByOwnerId(ownerId: Int): Result<List<VehicleCardUi>>
+
+    suspend fun getVehicleById(vehicleId: Int): Result<VehicleCardUi>
 
     suspend fun createVehicle(
         licensePlate: String,
@@ -279,6 +279,32 @@ class VehicleRepositoryImpl(
             result.onFailure { e ->
                 Log.e(TAG, "createVehicle() failed with exception", e)
             }
+        }
+    }
+
+    override suspend fun getVehicleById(vehicleId: Int): Result<VehicleCardUi> {
+        return runCatching {
+        val response = withContext(Dispatchers.IO) {
+            apolloClient.query(GetVehicleByIdQuery(vehicleId = vehicleId)).execute()
+        }
+
+        if (response.hasErrors()) {
+            throw Exception(response.errors?.firstOrNull()?.message ?: "Unknown error")
+        }
+
+        val vehicle = response.data?.getVehicleById
+
+         VehicleCardUi(
+            imageUrl = "error",
+            title = "${vehicle?.brand} ${vehicle?.model}",
+            location = vehicle?.location?.address ?: "-",
+            owner = "Owner #${vehicle?.ownerId}",
+            tagText = vehicle?.engineType?.name ?: "",
+            badgeText = vehicle?.reviewStars.toString(),
+            costPerDay = vehicle?.costPerDay ?: 0.0
+        )
+        }.also { r ->
+            r.onFailure { e -> Log.e(TAG, "getVehicleById failed", e) }
         }
     }
 }

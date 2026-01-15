@@ -1,0 +1,90 @@
+package com.fsa_profgroep_4.vroomly.ui.screens.reservation.overview
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
+import com.fsa_profgroep_4.vroomly.ui.components.ReservationCardData
+import com.fsa_profgroep_4.vroomly.ui.components.ReservationListItem
+import com.fsa_profgroep_4.vroomly.ui.components.VroomlyBackButton
+import com.fsa_profgroep_4.vroomly.ui.components.VroomlyBottomBar
+import org.koin.androidx.compose.koinViewModel
+
+@Composable
+fun ReservationOverviewScreen(
+    modifier: Modifier = Modifier,
+    viewModel: ReservationViewModel = koinViewModel()
+){
+    var currentRoute by remember { mutableStateOf("reservations") }
+    val state by viewModel.uiState.collectAsState()
+
+    var displayItems by remember { mutableStateOf<List<ReservationCardData>>(emptyList()) }
+
+    LaunchedEffect(state.items) {
+        displayItems = state.items
+    }
+
+    Scaffold(
+        topBar = {
+            VroomlyBackButton(
+                onBackClicked = { viewModel.onCancel() }
+            )
+        },
+        modifier = modifier.fillMaxSize(),
+        bottomBar = {
+            VroomlyBottomBar(
+                currentRoute = currentRoute,
+                onNavigate = {
+                    currentRoute = it
+                    viewModel.onNavigate(it)
+                }
+            )
+        }
+
+    ){ padding ->
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .padding(horizontal = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Box(Modifier.fillMaxSize()) {
+
+                ReservationList(
+                    items = displayItems,
+                )
+                }
+            }
+        }
+}
+
+
+@Composable
+fun ReservationList(
+    items: List<ReservationCardData>
+) {
+    val listState = rememberLazyListState()
+
+    LazyColumn(
+        state = listState,
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.testTag("reservation_list")
+    ) {
+        items(items) { ReservationListItem(data = it) }
+    }
+}
