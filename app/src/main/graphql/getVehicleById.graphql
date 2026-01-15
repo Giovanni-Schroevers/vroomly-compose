@@ -1,0 +1,31 @@
+query GetVehicleById($vehicleId: Int!) {
+    getVehicleById(vehicleId: $vehicleId) {
+        id
+        brand
+        model
+        year
+        color
+        category
+        engineType
+        seats
+        costPerDay
+        odometerKm
+        motValidTill
+        vin
+        zeroToHundred
+        licensePlate
+        reviewStars
+        status
+        ownerId
+        location {
+            address
+            latitude
+            longitude
+        }
+        images {
+            id
+            url
+            number
+        }
+    }
+}

@@ -22,4 +22,7 @@ object Account : NavKey
 object AccountEdit : NavKey
 
 @Serializable
+object RegisterCar : NavKey
+
+@Serializable
 object VehiclesOverview : NavKey
