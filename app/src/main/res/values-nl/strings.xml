@@ -89,4 +89,7 @@
     <string name="status">Status</string>
     <string name="delete_vehicle">Voertuig verwijderen</string>
     <string name="delete_vehicle_confirmation">Weet u zeker dat u dit voertuig wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.</string>
+    <string name="edit_car">Auto bewerken</string>
+    <string name="edit_car_subtitle">Werk uw voertuiggegevens bij.</string>
+    <string name="vehicle_update_failed">Voertuig bijwerken mislukt</string>
 </resources>

@@ -91,4 +91,7 @@
     <string name="status">Status</string>
     <string name="delete_vehicle">Delete vehicle</string>
     <string name="delete_vehicle_confirmation">Are you sure you want to delete this vehicle? This action cannot be undone.</string>
+    <string name="edit_car">Edit car</string>
+    <string name="edit_car_subtitle">Update your vehicle details.</string>
+    <string name="vehicle_update_failed">Vehicle update failed</string>
 </resources>

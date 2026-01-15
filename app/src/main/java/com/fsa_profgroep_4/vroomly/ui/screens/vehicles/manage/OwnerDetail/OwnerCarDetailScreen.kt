@@ -243,6 +243,18 @@ fun OwnerCarDetailScreen(
                     HorizontalDivider()
                     Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
 
+                    // Edit button
+                    Button(
+                        onClick = { viewModel.onEditCarClicked() },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = stringResource(R.string.edit_car)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+
                     // Delete button
                     Button(
                         onClick = { viewModel.showDeleteConfirmation() },
