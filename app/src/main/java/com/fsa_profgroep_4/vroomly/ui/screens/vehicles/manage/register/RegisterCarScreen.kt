@@ -1,4 +1,4 @@
-package com.fsa_profgroep_4.vroomly.ui.screens.vehicles.register
+package com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.register
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -37,7 +37,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.rocketreserver.type.EngineType
 import com.example.rocketreserver.type.VehicleCategory
@@ -123,6 +122,7 @@ fun RegisterCarScreen(
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
 
                 // Add image button
+                // TODO add add image functionality
                 VroomlyButton(
                     text = stringResource(R.string.add_image),
                     onClick = { /* No functionality yet */ },

@@ -1,4 +1,4 @@
-package com.fsa_profgroep_4.vroomly.ui.screens.vehicles.register
+package com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.register
 
 import android.app.Application
 import androidx.lifecycle.ViewModel

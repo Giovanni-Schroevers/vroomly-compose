@@ -11,8 +11,8 @@ import com.fsa_profgroep_4.vroomly.ui.screens.auth.register.RegisterScreen
 import com.fsa_profgroep_4.vroomly.ui.screens.auth.register.RegisterViewModel
 import com.fsa_profgroep_4.vroomly.ui.screens.auth.start.StartScreen
 import com.fsa_profgroep_4.vroomly.ui.screens.auth.start.StartViewModel
-import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.register.RegisterCarScreen
-import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.register.RegisterCarViewModel
+import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.register.RegisterCarScreen
+import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.register.RegisterCarViewModel
 import com.fsa_profgroep_4.vroomly.ui.screens.home.HomeScreen
 import com.fsa_profgroep_4.vroomly.ui.screens.home.HomeViewModel
 import org.koin.android.ext.koin.androidApplication

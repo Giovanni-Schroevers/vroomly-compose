@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.fsa_profgroep_4.vroomly.data.local.UserEntity
 import com.fsa_profgroep_4.vroomly.data.user.UserRepository
 import com.fsa_profgroep_4.vroomly.navigation.AccountEdit
-import com.fsa_profgroep_4.vroomly.navigation.RegisterCar
+import com.fsa_profgroep_4.vroomly.navigation.OwnerCarOverview
 import com.fsa_profgroep_4.vroomly.navigation.Start
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
 import com.fsa_profgroep_4.vroomly.ui.base.BaseViewModel
@@ -57,6 +57,6 @@ class AccountViewModel(
     }
 
     fun onManageCars() {
-        navigator.goTo(RegisterCar)
+        navigator.goTo(OwnerCarOverview)
     }
 }

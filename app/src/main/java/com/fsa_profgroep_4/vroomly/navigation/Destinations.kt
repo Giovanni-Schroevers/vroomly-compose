@@ -26,3 +26,6 @@ object RegisterCar : NavKey
 
 @Serializable
 object VehiclesOverview : NavKey
+
+@Serializable
+object OwnerCarOverview : NavKey

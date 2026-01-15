@@ -84,4 +84,5 @@
     <string name="no_images">No images</string>
     <string name="add_image">Add image</string>
     <string name="manage_my_cars">Manage my cars</string>
+    <string name="no_cars_registered">No cars registered yet</string>
 </resources>

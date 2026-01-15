@@ -1,4 +1,4 @@
-package com.fsa_profgroep_4.vroomly.ui.screens.vehicles
+package com.fsa_profgroep_4.vroomly.ui.screens.vehicles.Overview
 
 import android.app.Application
 import androidx.lifecycle.viewModelScope
