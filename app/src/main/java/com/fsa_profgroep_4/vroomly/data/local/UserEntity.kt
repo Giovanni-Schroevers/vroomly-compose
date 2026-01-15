@@ -8,10 +8,10 @@ data class UserEntity(
     @PrimaryKey
     val id: Int,
     val email: String,
-    val firstName: String?,
+    val firstName: String,
     val middleName: String?,
-    val lastName: String?,
-    val username: String?,
-    val dateOfBirth: String?,
+    val lastName: String,
+    val username: String,
+    val dateOfBirth: String,
     val token: String
 )

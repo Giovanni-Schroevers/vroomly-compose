@@ -58,7 +58,7 @@ fun StartScreen(viewModel: StartViewModel = koinViewModel()) {
         )
         VroomlyButton(
             text = stringResource(R.string.register),
-            onClick = {},
+            onClick = { viewModel.onRegisterClicked() },
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .padding(top = 8.dp),

@@ -10,4 +10,22 @@ object Start : NavKey
 object Login : NavKey
 
 @Serializable
+object Register : NavKey
+
+@Serializable
 object Home : NavKey
+
+@Serializable
+object Account : NavKey
+
+@Serializable
+object AccountEdit : NavKey
+
+@Serializable
+object RegisterCar : NavKey
+
+@Serializable
+object VehiclesOverview : NavKey
+
+@Serializable
+object OwnerCarOverview : NavKey

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fsa_profgroep_4.vroomly.R
 import com.fsa_profgroep_4.vroomly.data.auth.AuthRepository
+import com.fsa_profgroep_4.vroomly.ui.models.FormField
 import com.fsa_profgroep_4.vroomly.navigation.Home
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,13 +15,10 @@ import kotlinx.coroutines.launch
 
 sealed class LoginUiState {
     data class Content(
-        val email: String = "",
-        val password: String = "",
+        val email: FormField = FormField(),
+        val password: FormField = FormField(),
         val isLoading: Boolean = false,
-        val emailError: String? = null,
-        val passwordError: String? = null,
         val generalError: String? = null,
-        val isSuccess: Boolean = false
     ) : LoginUiState()
 }
 
@@ -34,36 +32,44 @@ class LoginViewModel(
     val uiState: StateFlow<LoginUiState.Content> = _uiState.asStateFlow()
 
     fun onEmailChange(email: String) {
-        _uiState.value = _uiState.value.copy(email = email, emailError = null)
+        _uiState.value = _uiState.value.copy(
+            email = _uiState.value.email.copy(value = email, error = null)
+        )
     }
 
     fun onPasswordChange(password: String) {
-        _uiState.value = _uiState.value.copy(password = password, passwordError = null)
+        _uiState.value = _uiState.value.copy(
+            password = _uiState.value.password.copy(value = password, error = null)
+        )
     }
 
     fun login() {
         val currentState = _uiState.value
-        val email = currentState.email
-        val password = currentState.password
 
-        val emailError = if (email.isBlank()) application.getString(R.string.email_is_required) else null
-        val passwordError = if (password.isBlank()) application.getString(R.string.password_is_required) else null
+        val validatedState = currentState.copy(
+            email = currentState.email.validateRequired(application.getString(R.string.email_is_required)),
+            password = currentState.password.validateRequired(application.getString(R.string.password_is_required))
+        )
 
-        if (emailError != null || passwordError != null) {
-            _uiState.value = currentState.copy(
-                emailError = emailError,
-                passwordError = passwordError,
-                generalError = null
-            )
+        if (validatedState.email.error != null || validatedState.password.error != null) {
+            _uiState.value = validatedState.copy(generalError = null)
             return
         }
 
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, emailError = null, passwordError = null, generalError = null)
-            val result = authRepository.login(email, password)
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                email = _uiState.value.email.copy(error = null),
+                password = _uiState.value.password.copy(error = null),
+                generalError = null
+            )
+            val result = authRepository.login(
+                validatedState.email.value,
+                validatedState.password.value
+            )
             result.onSuccess {
-                _uiState.value = _uiState.value.copy(isLoading = false, isSuccess = true)
-                navigator.goTo(Home)
+                _uiState.value = _uiState.value.copy(isLoading = false)
+                navigator.resetTo(Home)
             }.onFailure { error ->
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,

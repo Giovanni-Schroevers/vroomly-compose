@@ -1,0 +1,32 @@
+query CreateVehicle($vehicle: VehicleInput!) {
+    createVehicle(vehicle: $vehicle) {
+        id
+        licensePlate
+        brand
+        model
+        year
+        color
+        category
+        engineType
+        seats
+        costPerDay
+        odometerKm
+        motValidTill
+        vin
+        zeroToHundred
+        status
+        reviewStars
+        ownerId
+        location {
+            address
+            latitude
+            longitude
+        }
+        images {
+            id
+            url
+            number
+            vehicleId
+        }
+    }
+}

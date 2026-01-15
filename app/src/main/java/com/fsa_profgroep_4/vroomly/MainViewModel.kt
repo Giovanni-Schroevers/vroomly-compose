@@ -7,7 +7,6 @@ import com.fsa_profgroep_4.vroomly.utils.JwtUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class MainViewModel(
@@ -23,16 +22,16 @@ class MainViewModel(
 
     private fun checkAuthState() {
         viewModelScope.launch {
-            val user = userDao.getCurrentUser().first()
-            
-            _authState.value = when {
-                user == null -> AuthState.Unauthenticated
-                user.token.isBlank() -> AuthState.Unauthenticated
-                JwtUtils.isTokenExpired(user.token) -> {
-                    userDao.clearTable()
-                    AuthState.Unauthenticated
+            userDao.getCurrentUser().collect { user ->
+                _authState.value = when {
+                    user == null -> AuthState.Unauthenticated
+                    user.token.isBlank() -> AuthState.Unauthenticated
+                    JwtUtils.isTokenExpired(user.token) -> {
+                        userDao.clearTable()
+                        AuthState.Unauthenticated
+                    }
+                    else -> AuthState.Authenticated
                 }
-                else -> AuthState.Authenticated
             }
         }
     }

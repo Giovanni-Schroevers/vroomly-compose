@@ -23,7 +23,8 @@ fun VroomlyTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     readOnly: Boolean = false,
     errorText: String? = null,
-    helperText: String? = null
+    helperText: String? = null,
+    trailingIcon: @Composable (() -> Unit)? = null
 ) {
     OutlinedTextField(
         value = value,
@@ -47,6 +48,7 @@ fun VroomlyTextField(
         readOnly = readOnly,
         singleLine = true,
         isError = errorText != null,
+        trailingIcon = trailingIcon,
         supportingText = {
             if (errorText != null) {
                 Text(
