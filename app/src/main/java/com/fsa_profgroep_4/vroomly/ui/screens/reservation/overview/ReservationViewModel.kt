@@ -36,6 +36,7 @@ class ReservationViewModel(
 
     private fun loadPage(){
         viewModelScope.launch {
+            //TODO: renterId from current user
             reservationRepository.getReservationsByRenterId(1)
                 .collect { reservations ->
                     val items = reservations.map { reservation ->

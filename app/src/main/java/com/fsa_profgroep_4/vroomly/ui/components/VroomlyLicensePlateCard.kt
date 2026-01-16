@@ -16,42 +16,67 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-private fun LicensePlateCard(
+fun LicensePlateCard(
     licencePlate: String
 ) {
     Card(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .fillMaxWidth(),
-        shape = RoundedCornerShape(14.dp),
-        elevation = CardDefaults.cardElevation(6.dp)
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(6.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Row(
-            modifier = Modifier
-                .background(Color(0xFFF3C316))
-                .padding(12.dp),
+            modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
+            Row(
                 modifier = Modifier
-                    .background(Color(0xFF1E3A8A), RoundedCornerShape(6.dp))
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                    .fillMaxWidth()
+                    .background(
+                        color = Color(0xFFF3C316),
+                        shape = RoundedCornerShape(10.dp)
+                    ),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("NL", color = Color.White, fontWeight = FontWeight.Bold)
+                Box(
+                    modifier = Modifier
+                        .background(
+                            color = Color(0xFF1E3A8A),
+                            shape = RoundedCornerShape(
+                                topStart = 10.dp,
+                                bottomStart = 10.dp
+                            )
+                        )
+                        .padding(horizontal = 10.dp, vertical = 6.dp)
+                ) {
+                    Text(
+                        text = "NL",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold, 
+                        fontSize = 14.sp
+                    )
+                }
+
+                Spacer(Modifier.width(12.dp))
+
+                Text(
+                    text = licencePlate,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 16.dp),
+                    textAlign = TextAlign.Center
+                )
             }
-
-            Spacer(Modifier.width(12.dp))
-
-            Text(
-                text = licencePlate,
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
         }
     }
 }

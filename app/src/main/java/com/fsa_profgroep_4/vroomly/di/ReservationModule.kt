@@ -1,8 +1,11 @@
 package com.fsa_profgroep_4.vroomly.di
 
+import com.fsa_profgroep_4.vroomly.navigation.CreateReservation
 import com.fsa_profgroep_4.vroomly.navigation.ReservationsOverview
 import com.fsa_profgroep_4.vroomly.ui.screens.reservation.overview.ReservationOverviewScreen
 import com.fsa_profgroep_4.vroomly.ui.screens.reservation.overview.ReservationViewModel
+import com.fsa_profgroep_4.vroomly.ui.screens.reservation.reserve.CreateReservationScreen
+import com.fsa_profgroep_4.vroomly.ui.screens.reservation.reserve.CreateReservationViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.scope.dsl.activityRetainedScope
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -14,7 +17,14 @@ import org.koin.dsl.navigation3.navigation
 val reservationModule = module {
     activityRetainedScope {
         viewModel { ReservationViewModel(get(), get(),get(), androidApplication()) }
+        viewModel { CreateReservationViewModel(get(), get(), get(), get()) }
 
         navigation<ReservationsOverview> { ReservationOverviewScreen(viewModel = get()) }
+        navigation<CreateReservation> { key ->
+            CreateReservationScreen(
+                vehicleId = key.vehicleId,
+                viewModel = get()
+            )
+        }
     }
 }
