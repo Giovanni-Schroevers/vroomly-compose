@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.rocketreserver.GetVehicleByIdQuery
 import com.fsa_profgroep_4.vroomly.data.local.ReservationEntity
 import com.fsa_profgroep_4.vroomly.data.reservation.ReservationRepository
+import com.fsa_profgroep_4.vroomly.data.user.IdentityProvider
 import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
 import com.fsa_profgroep_4.vroomly.ui.base.BaseViewModel
@@ -24,7 +25,7 @@ class ReservationViewModel(
     override val navigator: Navigator,
     private val reservationRepository: ReservationRepository,
     private val vehicleRepository: VehicleRepository,
-    private val application: Application
+    private val identityProvider: IdentityProvider
 ) : BaseViewModel(navigator) {
 
     private val _uiState = MutableStateFlow(ReservationsCardState())
@@ -36,8 +37,8 @@ class ReservationViewModel(
 
     private fun loadPage(){
         viewModelScope.launch {
-            //TODO: renterId from current user
-            reservationRepository.getReservationsByRenterId(1)
+            val renterId = identityProvider.requireUserId()
+            reservationRepository.getReservationsByRenterId(renterId)
                 .collect { reservations ->
                     val items = reservations.map { reservation ->
                         var vehicle = vehicleRepository

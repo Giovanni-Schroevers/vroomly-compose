@@ -59,7 +59,7 @@ fun LicensePlateCard(
                     Text(
                         text = "NL",
                         color = Color.White,
-                        fontWeight = FontWeight.Bold, 
+                        fontWeight = FontWeight.Bold,
                         fontSize = 14.sp
                     )
                 }

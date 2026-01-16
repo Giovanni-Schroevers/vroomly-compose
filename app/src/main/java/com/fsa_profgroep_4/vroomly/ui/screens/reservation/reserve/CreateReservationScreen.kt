@@ -29,8 +29,8 @@ import androidx.compose.ui.unit.dp
 import com.fsa_profgroep_4.vroomly.ui.components.DateRow
 import com.fsa_profgroep_4.vroomly.ui.components.LicensePlateCard
 import com.fsa_profgroep_4.vroomly.ui.components.VehicleImagesBlock
+import com.fsa_profgroep_4.vroomly.ui.components.VroomlyBackButton
 import com.fsa_profgroep_4.vroomly.ui.components.VroomlyDatePickerDialog
-import kotlinx.datetime.LocalDate
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -47,8 +47,14 @@ fun CreateReservationScreen(
     var endPickerOpen by remember { mutableStateOf(false) }
 
     Scaffold(
+        topBar = {
+            VroomlyBackButton(
+                onBackClicked = { viewModel.onCancel() }
+            )
+        },
         modifier = modifier.fillMaxSize()
-    ) { padding ->
+    ) {
+        padding ->
         Column(
             modifier = Modifier
                 .padding(padding)

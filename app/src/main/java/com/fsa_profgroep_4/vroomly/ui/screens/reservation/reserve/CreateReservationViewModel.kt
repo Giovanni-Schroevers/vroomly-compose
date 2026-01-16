@@ -117,5 +117,5 @@ class CreateReservationViewModel(
         }
     }
 
-    fun onBack() = navigator.goBack()
+    fun onCancel() = navigator.goBack()
 }
