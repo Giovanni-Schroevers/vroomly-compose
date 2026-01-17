@@ -67,6 +67,10 @@ class EditCarViewModel(
 
             vehicleRepository.getVehicleById(vehicleId)
                 .onSuccess { vehicle ->
+                    Log.d(TAG, "Loaded vehicle with ${vehicle.images.size} images")
+                    vehicle.images.forEach { img ->
+                        Log.d(TAG, "Image: id=${img.id}, number=${img.number}, url=${img.url}")
+                    }
                     val existingImages = vehicle.images
                         .sortedBy { it.number }
                         .map { it.url }

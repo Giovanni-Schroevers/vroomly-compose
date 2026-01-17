@@ -216,7 +216,9 @@ fun VehicleForm(
                 }
             } else {
                 LazyRow(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(allImages) { imageSource ->
@@ -224,9 +226,13 @@ fun VehicleForm(
                             model = imageSource,
                             contentDescription = null,
                             modifier = Modifier
-                                .fillMaxSize()
-                                .clip(RoundedCornerShape(12.dp)),
-                            contentScale = ContentScale.Crop
+                                .fillParentMaxHeight()
+                                .aspectRatio(1f)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(MaterialTheme.colorScheme.surfaceVariant),
+                            contentScale = ContentScale.Crop,
+                            placeholder = painterResource(R.drawable.ic_directions_car),
+                            error = painterResource(R.drawable.ic_directions_car)
                         )
                     }
                 }
