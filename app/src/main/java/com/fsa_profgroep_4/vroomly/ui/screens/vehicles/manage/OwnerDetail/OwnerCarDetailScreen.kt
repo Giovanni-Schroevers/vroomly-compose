@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -53,6 +54,7 @@ fun OwnerCarDetailScreen(
         topBar = {
             VroomlyBackButton(onBackClicked = { viewModel.onBackClicked() })
         },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             VroomlyBottomBar(
                 currentRoute = currentRoute,
@@ -242,6 +244,18 @@ fun OwnerCarDetailScreen(
                     Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
                     HorizontalDivider()
                     Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+
+                    // Edit button
+                    Button(
+                        onClick = { viewModel.onEditCarClicked() },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = stringResource(R.string.edit_car)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
 
                     // Delete button
                     Button(
