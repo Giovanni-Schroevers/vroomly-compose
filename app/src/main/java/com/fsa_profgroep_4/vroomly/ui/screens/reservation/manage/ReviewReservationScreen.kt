@@ -1,5 +1,10 @@
 package com.fsa_profgroep_4.vroomly.ui.screens.reservation.manage
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,15 +30,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.example.rocketreserver.type.ReservationStatus
 import com.fsa_profgroep_4.vroomly.ui.components.DateRow
 import com.fsa_profgroep_4.vroomly.ui.components.LicensePlateCard
 import com.fsa_profgroep_4.vroomly.ui.components.VehicleImagesBlock
 import com.fsa_profgroep_4.vroomly.ui.components.VroomlyBackButton
+import com.fsa_profgroep_4.vroomly.ui.screens.drive.components.DriveRouteMap
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
 import org.koin.androidx.compose.koinViewModel
 import java.text.NumberFormat
 import java.util.Locale
@@ -112,6 +127,18 @@ fun ReviewReservationScreen(
                             contentAlignment = Alignment.CenterStart
                         ) { Text(formatEuroNl(state.totalCost)) }
                     }
+                }
+            }
+
+            if (state.status == ReservationStatus.CONFIRMED
+                || state.status == ReservationStatus.ACTIVE){
+
+                Column(Modifier.padding(16.dp)) {
+                    Button(onClick = {
+                        viewModel.onOpenMap(reservationId)
+                    }) { Text("Show car on map") }
+
+                    Spacer(Modifier.height(12.dp))
                 }
             }
 

@@ -3,12 +3,14 @@ package com.fsa_profgroep_4.vroomly.ui.screens.reservation.manage
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo.api.Optional
+import com.example.rocketreserver.type.LocationSnapshotInput
 import com.example.rocketreserver.type.ReservationStatus
 import com.example.rocketreserver.type.ReservationUpdateInput
 import com.fsa_profgroep_4.vroomly.data.reservation.ReservationRepository
 import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
 import com.fsa_profgroep_4.vroomly.navigation.CreateReservation
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
+import com.fsa_profgroep_4.vroomly.navigation.ReservationMap
 import com.fsa_profgroep_4.vroomly.ui.base.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,6 +36,12 @@ data class ReviewReservationUiState(
 
     val costPerDay: Double? = null,
     val totalCost: Double? = null,
+
+    val vehicleLatitude: Double = 0.0,
+    val vehicleLongitude: Double = 0.0,
+
+    val mapEnabled: Boolean = false,
+    val routePoints: List<LocationSnapshotInput> = emptyList(),
 
     val isSubmitting: Boolean = false
 )
@@ -76,7 +84,9 @@ class ReviewReservationViewModel(
                         totalCost = recalcTotal(
                             LocalDate.parse(reservation.startDate),
                             LocalDate.parse(reservation.endDate),
-                            v.costPerDay)
+                            v.costPerDay),
+                        vehicleLatitude = v.location.latitude,
+                        vehicleLongitude = v.location.longitude
                     )
                 }
                 .onFailure { e ->
@@ -120,6 +130,27 @@ class ReviewReservationViewModel(
 
     fun onCancel() = navigator.goBack()
 
+    fun setRoutePoints(latitude: Double, longitude: Double) {
+        _uiState.value = _uiState.value.copy(
+            routePoints = listOf(
+                LocationSnapshotInput(
+                    latitude = latitude,
+                    longitude = longitude,
+                    timestamp = System.currentTimeMillis()
+                ),
+                LocationSnapshotInput(
+                    latitude = _uiState.value.vehicleLatitude,
+                    longitude = _uiState.value.vehicleLongitude,
+                    timestamp = System.currentTimeMillis() + 1
+                )
+            ),
+            mapEnabled = true
+        )
+    }
+
+    fun onOpenMap(reservationId: Int){
+        navigator.goTo(ReservationMap(reservationId))
+    }
 
     private fun recalcTotal(start: LocalDate?, end: LocalDate?, cpd: Double?): Double? {
         if (start == null || end == null || cpd == null) return null
