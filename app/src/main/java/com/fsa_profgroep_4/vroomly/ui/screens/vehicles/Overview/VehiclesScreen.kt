@@ -199,7 +199,8 @@ fun VehiclesOverviewScreen(
                     items = shownItems,
                     hasMore = state.hasMore,
                     isLoading = state.isLoading,
-                    onLoadMore = { viewModel.loadNextPage() }
+                    onLoadMore = { viewModel.loadNextPage() },
+                    onVehicleClick = { id -> viewModel.onVehicleSelected(id) }
                 )
 
                 if (state.isLoading && displayItems.isEmpty()) {
@@ -222,7 +223,8 @@ fun VehicleList(
     items: List<VehicleCardUi>,
     hasMore: Boolean,
     isLoading: Boolean,
-    onLoadMore: () -> Unit
+    onLoadMore: () -> Unit,
+    onVehicleClick: (Int) -> Unit
 ) {
     val listState = rememberLazyListState()
 
@@ -237,7 +239,11 @@ fun VehicleList(
         state = listState,
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier.testTag("vehicle_list")) {
-        items(items) { VehicleListItem(data = it) }
+        items(items) { item ->
+            VehicleListItem(
+                data = item,
+                onClick = { onVehicleClick(item.vehicleId) }
+        ) }
 
         // footer spinner for pagination
         if (isLoading && items.isNotEmpty()) {

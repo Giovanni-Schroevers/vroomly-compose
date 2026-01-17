@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo.api.Optional
 import com.example.rocketreserver.type.VehicleFilterInput
 import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
+import com.fsa_profgroep_4.vroomly.navigation.CreateReservation
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
 import com.fsa_profgroep_4.vroomly.ui.base.BaseViewModel
 import com.fsa_profgroep_4.vroomly.ui.components.VehicleCardUi
@@ -73,5 +74,9 @@ class VehiclesViewModel(
 
     fun onCancel() {
         navigator.goBack()
+    }
+
+    fun onVehicleSelected(vehicleId: Int) {
+        navigator.goTo(CreateReservation(vehicleId))
     }
 }

@@ -1,0 +1,13 @@
+query GetReservation($reservationId: Int!) {
+  getReservation(reservationId: $reservationId) {
+    id
+    startDate
+    endDate
+    status
+    totalCost
+    paid
+    createdAt
+    vehicleId
+    renterId
+  }
+}

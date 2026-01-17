@@ -1,0 +1,18 @@
+query CreateReservation($vehicleId: Int!, $renterId: Int!, $startDate: Date!, $endDate: Date!) {
+  createReservation(
+    vehicleId: $vehicleId
+    renterId: $renterId
+    startDate: $startDate
+    endDate: $endDate
+  ) {
+    id
+    startDate
+    endDate
+    status
+    totalCost
+    paid
+    createdAt
+    vehicleId
+    renterId
+  }
+}

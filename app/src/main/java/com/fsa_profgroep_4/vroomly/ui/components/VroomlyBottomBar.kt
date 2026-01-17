@@ -52,8 +52,8 @@ fun VroomlyBottomBar(
             isLogo = true
         ),
         BottomNavItem(
-            route = "reservations",
-            label = "Vehicles",
+            route = "reservation",
+            label = "Reservation",
             selectedIconRes = R.drawable.ic_directions_car,
             unselectedIconRes = R.drawable.ic_directions_car_outlined
         ),

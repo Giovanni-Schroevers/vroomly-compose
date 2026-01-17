@@ -94,6 +94,9 @@ dependencies {
 
     kapt(libs.androidx.room.compiler)
     implementation(libs.kotlinx.datetime)
+
+    implementation(libs.maplibre.android)
+
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("androidx.compose.material:material-icons-extended")
 }
