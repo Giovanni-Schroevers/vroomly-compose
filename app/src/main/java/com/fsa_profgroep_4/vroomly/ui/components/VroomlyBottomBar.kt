@@ -3,6 +3,7 @@ package com.fsa_profgroep_4.vroomly.ui.components
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.draw.shadow
@@ -65,10 +66,12 @@ fun VroomlyBottomBar(
     )
 
     NavigationBar(
-        modifier = modifier.shadow(elevation = 12.dp),
+        modifier = modifier
+            .shadow(elevation = 12.dp)
+            .height(70.dp),
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
-        windowInsets = WindowInsets.navigationBars
+        windowInsets = WindowInsets(0, 0, 0, 60)
     ) {
         navItems.forEach { item ->
             if (item.isLogo) {
