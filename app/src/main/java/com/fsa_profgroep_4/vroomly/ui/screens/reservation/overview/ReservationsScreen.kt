@@ -86,6 +86,7 @@ fun ReservationOverviewScreen(
                     hasMore = state.hasMore,
                     isLoading = state.isLoading,
                     onLoadMore = { viewModel.onLoadMore() },
+                    onReservationClick = { reservationId -> viewModel.onReservationSelected(reservationId) }
                 )
                 if (state.isLoading && displayItems.isEmpty()) {
                     Box(
@@ -109,6 +110,7 @@ fun ReservationList(
     hasMore: Boolean,
     isLoading: Boolean,
     onLoadMore: () -> Unit,
+    onReservationClick: (Int) -> Unit
 ) {
     val listState = rememberLazyListState()
 
@@ -122,6 +124,11 @@ fun ReservationList(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier.testTag("reservation_list")
     ) {
-        items(items) { ReservationListItem(data = it) }
+        items(items) {
+            ReservationListItem(
+                data = it,
+                onClick = {onReservationClick(it.reservationId)}
+            )
+        }
     }
 }

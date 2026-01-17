@@ -6,6 +6,7 @@ import com.fsa_profgroep_4.vroomly.data.reservation.ReservationRepository
 import com.fsa_profgroep_4.vroomly.data.user.UserRepository
 import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
+import com.fsa_profgroep_4.vroomly.navigation.ReservationsOverview
 import com.fsa_profgroep_4.vroomly.ui.base.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -130,7 +131,7 @@ class CreateReservationViewModel(
                         Log.d(TAG, "reservationRepository.createReservation onSuccess")
                         _uiState.value =
                             _uiState.value.copy(isSubmitting = false, submitSuccess = true)
-                        navigator.goBack()
+                        navigator.goTo(ReservationsOverview)
                     }.onFailure { e ->
                         Log.d(TAG, "reservationRepository.createReservation onFailure")
                         _uiState.value = _uiState.value.copy(
