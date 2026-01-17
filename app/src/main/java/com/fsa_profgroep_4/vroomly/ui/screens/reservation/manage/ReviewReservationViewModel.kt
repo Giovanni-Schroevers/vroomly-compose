@@ -32,6 +32,9 @@ data class ReviewReservationUiState(
     val startDate: LocalDate? = null,
     val endDate: LocalDate? = null,
 
+    val costPerDay: Double? = null,
+    val totalCost: Double? = null,
+
     val isSubmitting: Boolean = false
 )
 
@@ -68,7 +71,12 @@ class ReviewReservationViewModel(
                         imageUrls = v.images?.mapNotNull { it.url.takeIf { u -> u.isNotBlank() } }.orEmpty(),
                         startDate = LocalDate.parse(reservation.startDate),
                         endDate = LocalDate.parse(reservation.endDate),
-                        status =  ReservationStatus.valueOf(reservation.status)
+                        status =  ReservationStatus.valueOf(reservation.status),
+                        costPerDay = v.costPerDay,
+                        totalCost = recalcTotal(
+                            LocalDate.parse(reservation.startDate),
+                            LocalDate.parse(reservation.endDate),
+                            v.costPerDay)
                     )
                 }
                 .onFailure { e ->
@@ -111,4 +119,11 @@ class ReviewReservationViewModel(
     }
 
     fun onCancel() = navigator.goBack()
+
+
+    private fun recalcTotal(start: LocalDate?, end: LocalDate?, cpd: Double?): Double? {
+        if (start == null || end == null || cpd == null) return null
+        val days = (end.toEpochDays() - start.toEpochDays() + 1).coerceAtLeast(1) // inclusive
+        return days * cpd
+    }
 }
