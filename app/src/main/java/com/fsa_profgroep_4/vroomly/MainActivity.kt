@@ -93,7 +93,7 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
                         NavDisplay(
                             backStack = navigator.backStack,
                             modifier = Modifier
-                                .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top)),
+                                .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Vertical)),
                             onBack = { navigator.goBack() },
                             entryProvider = getEntryProvider()
                         )
