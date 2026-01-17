@@ -99,6 +99,9 @@ dependencies {
     implementation(libs.maplibre.android)
 
     implementation("io.coil-kt:coil-compose:2.6.0")
+
+    implementation(libs.supabase.storage)
+    implementation(libs.ktor.client.android)
 }
 
 apollo {

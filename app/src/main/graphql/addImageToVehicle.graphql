@@ -1,0 +1,10 @@
+query AddImageToVehicle($vehicleId: Int!, $imageUrl: String!, $number: Int) {
+    addImageToVehicle(vehicleId: $vehicleId, imageUrl: $imageUrl, number: $number) {
+        id
+        images {
+            id
+            number
+            url
+        }
+    }
+}

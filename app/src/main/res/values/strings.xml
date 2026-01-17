@@ -90,6 +90,11 @@
     <string name="select_engine_type">Select engine type</string>
     <string name="no_images">No images</string>
     <string name="add_image">Add image</string>
+    <string name="take_photo">Take photo</string>
+    <string name="choose_from_gallery">Choose from gallery</string>
+    <string name="uploading_image">Uploading image…</string>
+    <string name="image_upload_failed">Failed to upload image</string>
+    <string name="camera_permission_required">Camera permission is required to take photos</string>
     <string name="manage_my_cars">Manage my cars</string>
     <string name="no_cars_registered">No cars registered yet</string>
     <string name="reservations">Reservations</string>

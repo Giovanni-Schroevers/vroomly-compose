@@ -1,6 +1,7 @@
 package com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.edit
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fsa_profgroep_4.vroomly.R
@@ -32,7 +33,10 @@ data class EditCarUiState(
     val longitude: FormField = FormField(),
     val isLoading: Boolean = false,
     val isLoadingVehicle: Boolean = true,
-    val generalError: String? = null
+    val generalError: String? = null,
+    val existingImageUrls: List<String> = emptyList(),
+    val selectedImageUris: List<Uri> = emptyList(),
+    val isUploadingImage: Boolean = false
 ) {
     fun hasErrors() = listOf(
         licensePlate, brand, model, year, color, seats,
@@ -60,6 +64,9 @@ class EditCarViewModel(
 
             vehicleRepository.getVehicleById(vehicleId)
                 .onSuccess { vehicle ->
+                    val existingImages = vehicle.images
+                        .sortedBy { it.number }
+                        .map { it.url }
                     _uiState.value = _uiState.value.copy(
                         licensePlate = FormField(value = vehicle.licensePlate),
                         brand = FormField(value = vehicle.brand),
@@ -77,6 +84,7 @@ class EditCarViewModel(
                         address = FormField(value = vehicle.location?.address ?: ""),
                         latitude = FormField(value = vehicle.location?.latitude?.toString() ?: "52.3676"),
                         longitude = FormField(value = vehicle.location?.longitude?.toString() ?: "4.9041"),
+                        existingImageUrls = existingImages,
                         isLoadingVehicle = false
                     )
                 }
@@ -144,6 +152,52 @@ class EditCarViewModel(
 
     fun onAddressChange(value: String) {
         _uiState.value = _uiState.value.copy(address = _uiState.value.address.copy(value = value, error = null))
+    }
+
+    fun onImageSelected(uri: Uri) {
+        _uiState.value = _uiState.value.copy(isUploadingImage = true)
+        viewModelScope.launch {
+            uploadNewImage(uri)
+        }
+    }
+
+    private suspend fun uploadNewImage(uri: Uri) {
+        val contentResolver = application.contentResolver
+        try {
+            val inputStream = contentResolver.openInputStream(uri)
+            val imageBytes = inputStream?.readBytes()
+            inputStream?.close()
+
+            if (imageBytes != null) {
+                val nextImageNumber = _uiState.value.existingImageUrls.size + _uiState.value.selectedImageUris.size
+                val result = vehicleRepository.uploadAndAddImageToVehicle(
+                    vehicleId = vehicleId,
+                    imageBytes = imageBytes,
+                    imageNumber = nextImageNumber
+                )
+                result.onSuccess { imageUrl ->
+                    _uiState.value = _uiState.value.copy(
+                        existingImageUrls = _uiState.value.existingImageUrls + imageUrl,
+                        isUploadingImage = false
+                    )
+                }.onFailure {
+                    _uiState.value = _uiState.value.copy(
+                        isUploadingImage = false,
+                        generalError = application.getString(R.string.image_upload_failed)
+                    )
+                }
+            } else {
+                _uiState.value = _uiState.value.copy(
+                    isUploadingImage = false,
+                    generalError = application.getString(R.string.image_upload_failed)
+                )
+            }
+        } catch (e: Exception) {
+            _uiState.value = _uiState.value.copy(
+                isUploadingImage = false,
+                generalError = application.getString(R.string.image_upload_failed)
+            )
+        }
     }
 
     fun saveVehicle() {
