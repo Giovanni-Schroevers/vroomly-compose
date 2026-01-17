@@ -7,6 +7,8 @@ import com.apollographql.apollo.api.Optional
 import com.example.rocketreserver.AvailableVehiclesQuery
 import com.example.rocketreserver.CreateVehicleQuery
 import com.example.rocketreserver.DeleteVehicleMutation
+import com.example.rocketreserver.UpdateVehicleMutation
+import com.example.rocketreserver.type.VehicleUpdateInput
 import com.example.rocketreserver.GetReservationsByVehicleIdQuery
 import com.example.rocketreserver.GetVehicleByIdQuery
 import com.example.rocketreserver.GetVehiclesByOwnerIdQuery
@@ -63,6 +65,26 @@ interface VehicleRepository {
     ): Result<CreateVehicleQuery.CreateVehicle>
 
     suspend fun deleteVehicleById(vehicleId: Int): Result<DeleteVehicleMutation.DeleteVehicle>
+
+    suspend fun updateVehicle(
+        vehicleId: Int,
+        licensePlate: String?,
+        brand: String?,
+        model: String?,
+        year: Int?,
+        color: String?,
+        category: String?,
+        engineType: String?,
+        seats: Int?,
+        costPerDay: Double?,
+        odometerKm: Double?,
+        motValidTill: String?,
+        vin: String?,
+        zeroToHundred: Double?,
+        address: String?,
+        latitude: Double?,
+        longitude: Double?
+    ): Result<UpdateVehicleMutation.UpdateVehicle>
 }
 
 private const val TAG = "VehicleRepository"
@@ -340,6 +362,78 @@ class VehicleRepositoryImpl(
             response.data?.deleteVehicle ?: throw Exception("Failed to delete vehicle")
         }.also { r ->
             r.onFailure { e -> Log.e(TAG, "deleteVehicleById failed", e) }
+        }
+    }
+
+    override suspend fun updateVehicle(
+        vehicleId: Int,
+        licensePlate: String?,
+        brand: String?,
+        model: String?,
+        year: Int?,
+        color: String?,
+        category: String?,
+        engineType: String?,
+        seats: Int?,
+        costPerDay: Double?,
+        odometerKm: Double?,
+        motValidTill: String?,
+        vin: String?,
+        zeroToHundred: Double?,
+        address: String?,
+        latitude: Double?,
+        longitude: Double?
+    ): Result<UpdateVehicleMutation.UpdateVehicle> {
+        return runCatching {
+            val vehicleCategory = category?.let {
+                VehicleCategory.entries.find { c -> c.name == it }
+            }
+            val vehicleEngineType = engineType?.let {
+                EngineType.entries.find { e -> e.name == it }
+            }
+
+            val locationInput = if (address != null && latitude != null && longitude != null) {
+                Optional.present(VehicleLocationInput(
+                    address = address,
+                    latitude = latitude,
+                    longitude = longitude
+                ))
+            } else {
+                Optional.absent()
+            }
+
+            val vehicleUpdateInput = VehicleUpdateInput(
+                id = vehicleId,
+                licensePlate = Optional.presentIfNotNull(licensePlate),
+                brand = Optional.presentIfNotNull(brand),
+                model = Optional.presentIfNotNull(model),
+                year = Optional.presentIfNotNull(year),
+                color = Optional.presentIfNotNull(color),
+                category = Optional.presentIfNotNull(vehicleCategory),
+                engineType = Optional.presentIfNotNull(vehicleEngineType),
+                seats = Optional.presentIfNotNull(seats),
+                costPerDay = Optional.presentIfNotNull(costPerDay),
+                odometerKm = Optional.presentIfNotNull(odometerKm),
+                motValidTill = Optional.presentIfNotNull(motValidTill),
+                vin = Optional.presentIfNotNull(vin),
+                zeroToHundred = Optional.presentIfNotNull(zeroToHundred),
+                location = locationInput
+            )
+
+            val response = withContext(Dispatchers.IO) {
+                apolloClient.mutation(UpdateVehicleMutation(vehicle = vehicleUpdateInput)).execute()
+            }
+
+            if (response.hasErrors()) {
+                val errorMsg = response.errors?.first()?.message ?: "Unknown error updating vehicle"
+                throw Exception(errorMsg)
+            }
+
+            response.data?.updateVehicle ?: throw Exception("Vehicle data is null")
+        }.also { result ->
+            result.onFailure { e ->
+                Log.e(TAG, "updateVehicle() failed with exception", e)
+            }
         }
     }
 }

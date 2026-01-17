@@ -1,10 +1,8 @@
-package com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.register
+package com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.edit
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-//import com.example.rocketreserver.type.EngineType
-//import com.example.rocketreserver.type.VehicleCategory
 import com.fsa_profgroep_4.vroomly.R
 import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
@@ -15,7 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-data class RegisterCarUiState(
+data class EditCarUiState(
     val licensePlate: FormField = FormField(),
     val brand: FormField = FormField(),
     val model: FormField = FormField(),
@@ -23,16 +21,17 @@ data class RegisterCarUiState(
     val color: FormField = FormField(),
     val category: FormField = FormField(),
     val engineType: FormField = FormField(),
-    val seats: FormField = FormField(value = "5"),
+    val seats: FormField = FormField(),
     val costPerDay: FormField = FormField(),
-    val odometerKm: FormField = FormField(value = "0"),
+    val odometerKm: FormField = FormField(),
     val motValidTill: FormField = FormField(),
     val vin: FormField = FormField(),
-    val zeroToHundred: FormField = FormField(value = "0"),
+    val zeroToHundred: FormField = FormField(),
     val address: FormField = FormField(),
-    val latitude: FormField = FormField(value = "52.3676"),
-    val longitude: FormField = FormField(value = "4.9041"),
+    val latitude: FormField = FormField(),
+    val longitude: FormField = FormField(),
     val isLoading: Boolean = false,
+    val isLoadingVehicle: Boolean = true,
     val generalError: String? = null
 ) {
     fun hasErrors() = listOf(
@@ -41,14 +40,54 @@ data class RegisterCarUiState(
     ).any { it.error != null }
 }
 
-class RegisterCarViewModel(
+class EditCarViewModel(
     private val navigator: Navigator,
     private val vehicleRepository: VehicleRepository,
-    private val application: Application
+    private val application: Application,
+    private val vehicleId: Int
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(RegisterCarUiState())
-    val uiState: StateFlow<RegisterCarUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(EditCarUiState())
+    val uiState: StateFlow<EditCarUiState> = _uiState.asStateFlow()
+
+    init {
+        loadVehicleDetails()
+    }
+
+    private fun loadVehicleDetails() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoadingVehicle = true, generalError = null)
+
+            vehicleRepository.getVehicleById(vehicleId)
+                .onSuccess { vehicle ->
+                    _uiState.value = _uiState.value.copy(
+                        licensePlate = FormField(value = vehicle.licensePlate),
+                        brand = FormField(value = vehicle.brand),
+                        model = FormField(value = vehicle.model),
+                        year = FormField(value = vehicle.year.toString()),
+                        color = FormField(value = vehicle.color),
+                        category = FormField(value = vehicle.category.name),
+                        engineType = FormField(value = vehicle.engineType.name),
+                        seats = FormField(value = vehicle.seats.toString()),
+                        costPerDay = FormField(value = vehicle.costPerDay.toString()),
+                        odometerKm = FormField(value = vehicle.odometerKm.toString()),
+                        motValidTill = FormField(value = vehicle.motValidTill),
+                        vin = FormField(value = vehicle.vin),
+                        zeroToHundred = FormField(value = vehicle.zeroToHundred.toString()),
+                        address = FormField(value = vehicle.location?.address ?: ""),
+                        latitude = FormField(value = vehicle.location?.latitude?.toString() ?: "52.3676"),
+                        longitude = FormField(value = vehicle.location?.longitude?.toString() ?: "4.9041"),
+                        isLoadingVehicle = false
+                    )
+                }
+                .onFailure { e ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoadingVehicle = false,
+                        generalError = e.message ?: "Failed to load vehicle"
+                    )
+                }
+        }
+    }
 
     fun onLicensePlateChange(value: String) {
         if (value.length > 15) return
@@ -105,14 +144,6 @@ class RegisterCarViewModel(
 
     fun onAddressChange(value: String) {
         _uiState.value = _uiState.value.copy(address = _uiState.value.address.copy(value = value, error = null))
-    }
-
-    fun onLatitudeChange(value: String) {
-        _uiState.value = _uiState.value.copy(latitude = _uiState.value.latitude.copy(value = value, error = null))
-    }
-
-    fun onLongitudeChange(value: String) {
-        _uiState.value = _uiState.value.copy(longitude = _uiState.value.longitude.copy(value = value, error = null))
     }
 
     fun saveVehicle() {
@@ -206,25 +237,25 @@ class RegisterCarViewModel(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, generalError = null)
 
-            val result = vehicleRepository.createVehicle(
+            val result = vehicleRepository.updateVehicle(
+                vehicleId = vehicleId,
                 licensePlate = validatedState.licensePlate.value,
                 brand = validatedState.brand.value,
                 model = validatedState.model.value,
-                year = validatedState.year.value.toIntOrNull() ?: 0,
+                year = validatedState.year.value.toIntOrNull(),
                 color = validatedState.color.value,
                 category = validatedState.category.value,
                 engineType = validatedState.engineType.value,
-                seats = validatedState.seats.value.toIntOrNull() ?: 5,
-                costPerDay = validatedState.costPerDay.value.toDoubleOrNull() ?: 0.0,
-                odometerKm = validatedState.odometerKm.value.toDoubleOrNull() ?: 0.0,
+                seats = validatedState.seats.value.toIntOrNull(),
+                costPerDay = validatedState.costPerDay.value.toDoubleOrNull(),
+                odometerKm = validatedState.odometerKm.value.toDoubleOrNull(),
                 motValidTill = validatedState.motValidTill.value,
                 vin = validatedState.vin.value,
-                zeroToHundred = validatedState.zeroToHundred.value.toDoubleOrNull() ?: 0.0,
+                zeroToHundred = validatedState.zeroToHundred.value.toDoubleOrNull(),
                 address = validatedState.address.value,
-                latitude = validatedState.latitude.value.toDoubleOrNull() ?: 52.3676,
-                longitude = validatedState.longitude.value.toDoubleOrNull() ?: 4.9041
+                latitude = validatedState.latitude.value.toDoubleOrNull(),
+                longitude = validatedState.longitude.value.toDoubleOrNull()
             )
-
 
             result.onSuccess {
                 _uiState.value = _uiState.value.copy(isLoading = false)
@@ -233,7 +264,7 @@ class RegisterCarViewModel(
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
                     generalError = error.message?.split(" : ")?.last()
-                        ?: application.getString(R.string.vehicle_registration_failed)
+                        ?: application.getString(R.string.vehicle_update_failed)
                 )
             }
         }
