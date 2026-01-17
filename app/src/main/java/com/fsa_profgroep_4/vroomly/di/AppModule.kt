@@ -8,7 +8,7 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    includes(dataModule, authModule, accountModule, carModule, driveModule)
+    includes(dataModule, authModule, accountModule, carModule, reservationModule, driveModule)
 
     activityRetainedScope {
         scoped {

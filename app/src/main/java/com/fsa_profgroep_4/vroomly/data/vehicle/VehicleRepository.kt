@@ -6,6 +6,10 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.example.rocketreserver.AvailableVehiclesQuery
 import com.example.rocketreserver.CreateVehicleQuery
+import com.example.rocketreserver.DeleteVehicleMutation
+import com.example.rocketreserver.UpdateVehicleMutation
+import com.example.rocketreserver.type.VehicleUpdateInput
+import com.example.rocketreserver.GetReservationsByVehicleIdQuery
 import com.example.rocketreserver.GetVehicleByIdQuery
 import com.example.rocketreserver.GetVehiclesByOwnerIdQuery
 import com.example.rocketreserver.type.EngineType
@@ -37,6 +41,10 @@ interface VehicleRepository {
 
     suspend fun getVehiclesByOwnerId(ownerId: Int): Result<List<VehicleCardUi>>
 
+    suspend fun getVehicleById(vehicleId: Int): Result<GetVehicleByIdQuery.GetVehicleById>
+
+    suspend fun getReservationsByVehicleId(vehicleId: Int): Result<List<GetReservationsByVehicleIdQuery.GetReservationsByVehicleId>>
+
     suspend fun createVehicle(
         licensePlate: String,
         brand: String,
@@ -55,6 +63,28 @@ interface VehicleRepository {
         latitude: Double,
         longitude: Double
     ): Result<CreateVehicleQuery.CreateVehicle>
+
+    suspend fun deleteVehicleById(vehicleId: Int): Result<DeleteVehicleMutation.DeleteVehicle>
+
+    suspend fun updateVehicle(
+        vehicleId: Int,
+        licensePlate: String?,
+        brand: String?,
+        model: String?,
+        year: Int?,
+        color: String?,
+        category: String?,
+        engineType: String?,
+        seats: Int?,
+        costPerDay: Double?,
+        odometerKm: Double?,
+        motValidTill: String?,
+        vin: String?,
+        zeroToHundred: Double?,
+        address: String?,
+        latitude: Double?,
+        longitude: Double?
+    ): Result<UpdateVehicleMutation.UpdateVehicle>
 }
 
 private const val TAG = "VehicleRepository"
@@ -111,6 +141,7 @@ class VehicleRepositoryImpl(
                         // Always use cache if present even when it's "error"
                         imageUrlCache[id]?.let { cached ->
                             return@async VehicleCardUi(
+                                vehicleId = id,
                                 imageUrl = cached,
                                 title = vehicle.brand,
                                 location = "-",
@@ -126,6 +157,7 @@ class VehicleRepositoryImpl(
                             val placeholder = "error"
                             imageUrlCache[id] = placeholder // cache miss as well
                             return@async VehicleCardUi(
+                                vehicleId = id,
                                 imageUrl = placeholder,
                                 title = vehicle.brand,
                                 location = "-",
@@ -158,6 +190,7 @@ class VehicleRepositoryImpl(
                         imageUrlCache[id] = imageUrl
 
                         VehicleCardUi(
+                            vehicleId = id,
                             imageUrl = imageUrl,
                             title = vehicle.brand,
                             location = details?.location?.address ?: "-",
@@ -195,8 +228,10 @@ class VehicleRepositoryImpl(
 
             val vehicles = response.data?.getVehiclesByOwnerId.orEmpty()
 
-            vehicles.map { vehicle ->
+            vehicles.mapNotNull { vehicle ->
+                val id = vehicle.id ?: return@mapNotNull null
                 VehicleCardUi(
+                    vehicleId = id,
                     imageUrl = "error",
                     title = "${vehicle.brand} ${vehicle.model}",
                     location = vehicle.location?.address ?: "-",
@@ -208,6 +243,38 @@ class VehicleRepositoryImpl(
             }
         }.also { r ->
             r.onFailure { e -> Log.e(TAG, "getVehiclesByOwnerId failed", e) }
+        }
+    }
+
+    override suspend fun getVehicleById(vehicleId: Int): Result<GetVehicleByIdQuery.GetVehicleById> {
+        return runCatching {
+            val response = withContext(Dispatchers.IO) {
+                apolloClient.query(GetVehicleByIdQuery(vehicleId = vehicleId)).execute()
+            }
+
+            if (response.hasErrors()) {
+                throw Exception(response.errors?.firstOrNull()?.message ?: "Unknown error")
+            }
+
+            response.data?.getVehicleById ?: throw Exception("Vehicle not found")
+        }.also { r ->
+            r.onFailure { e -> Log.e(TAG, "getVehicleById failed", e) }
+        }
+    }
+
+    override suspend fun getReservationsByVehicleId(vehicleId: Int): Result<List<GetReservationsByVehicleIdQuery.GetReservationsByVehicleId>> {
+        return runCatching {
+            val response = withContext(Dispatchers.IO) {
+                apolloClient.query(GetReservationsByVehicleIdQuery(vehicleId = vehicleId)).execute()
+            }
+
+            if (response.hasErrors()) {
+                throw Exception(response.errors?.firstOrNull()?.message ?: "Unknown error")
+            }
+
+            response.data?.getReservationsByVehicleId.orEmpty()
+        }.also { r ->
+            r.onFailure { e -> Log.e(TAG, "getReservationsByVehicleId failed", e) }
         }
     }
 
@@ -278,6 +345,94 @@ class VehicleRepositoryImpl(
         }.also { result ->
             result.onFailure { e ->
                 Log.e(TAG, "createVehicle() failed with exception", e)
+            }
+        }
+    }
+
+    override suspend fun deleteVehicleById(vehicleId: Int): Result<DeleteVehicleMutation.DeleteVehicle> {
+        return runCatching {
+            val response = withContext(Dispatchers.IO) {
+                apolloClient.mutation(DeleteVehicleMutation(vehicleId = vehicleId)).execute()
+            }
+
+            if (response.hasErrors()) {
+                throw Exception(response.errors?.firstOrNull()?.message ?: "Unknown error")
+            }
+
+            response.data?.deleteVehicle ?: throw Exception("Failed to delete vehicle")
+        }.also { r ->
+            r.onFailure { e -> Log.e(TAG, "deleteVehicleById failed", e) }
+        }
+    }
+
+    override suspend fun updateVehicle(
+        vehicleId: Int,
+        licensePlate: String?,
+        brand: String?,
+        model: String?,
+        year: Int?,
+        color: String?,
+        category: String?,
+        engineType: String?,
+        seats: Int?,
+        costPerDay: Double?,
+        odometerKm: Double?,
+        motValidTill: String?,
+        vin: String?,
+        zeroToHundred: Double?,
+        address: String?,
+        latitude: Double?,
+        longitude: Double?
+    ): Result<UpdateVehicleMutation.UpdateVehicle> {
+        return runCatching {
+            val vehicleCategory = category?.let {
+                VehicleCategory.entries.find { c -> c.name == it }
+            }
+            val vehicleEngineType = engineType?.let {
+                EngineType.entries.find { e -> e.name == it }
+            }
+
+            val locationInput = if (address != null && latitude != null && longitude != null) {
+                Optional.present(VehicleLocationInput(
+                    address = address,
+                    latitude = latitude,
+                    longitude = longitude
+                ))
+            } else {
+                Optional.absent()
+            }
+
+            val vehicleUpdateInput = VehicleUpdateInput(
+                id = vehicleId,
+                licensePlate = Optional.presentIfNotNull(licensePlate),
+                brand = Optional.presentIfNotNull(brand),
+                model = Optional.presentIfNotNull(model),
+                year = Optional.presentIfNotNull(year),
+                color = Optional.presentIfNotNull(color),
+                category = Optional.presentIfNotNull(vehicleCategory),
+                engineType = Optional.presentIfNotNull(vehicleEngineType),
+                seats = Optional.presentIfNotNull(seats),
+                costPerDay = Optional.presentIfNotNull(costPerDay),
+                odometerKm = Optional.presentIfNotNull(odometerKm),
+                motValidTill = Optional.presentIfNotNull(motValidTill),
+                vin = Optional.presentIfNotNull(vin),
+                zeroToHundred = Optional.presentIfNotNull(zeroToHundred),
+                location = locationInput
+            )
+
+            val response = withContext(Dispatchers.IO) {
+                apolloClient.mutation(UpdateVehicleMutation(vehicle = vehicleUpdateInput)).execute()
+            }
+
+            if (response.hasErrors()) {
+                val errorMsg = response.errors?.first()?.message ?: "Unknown error updating vehicle"
+                throw Exception(errorMsg)
+            }
+
+            response.data?.updateVehicle ?: throw Exception("Vehicle data is null")
+        }.also { result ->
+            result.onFailure { e ->
+                Log.e(TAG, "updateVehicle() failed with exception", e)
             }
         }
     }
