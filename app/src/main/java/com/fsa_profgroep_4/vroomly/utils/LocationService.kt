@@ -84,15 +84,17 @@ class LocationService : Service(), KoinComponent, SensorEventListener {
             .setMinUpdateIntervalMillis(TimeUnit.SECONDS.toMillis(10))
             .build()
 
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper()
-        )
+        try {
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+            )
 
-        accelerometer?.let {
-            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
-        }
+            accelerometer?.let {
+                sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
+            }
+        } catch (e: SecurityException) {}
     }
 
     private fun stopTracking() {
