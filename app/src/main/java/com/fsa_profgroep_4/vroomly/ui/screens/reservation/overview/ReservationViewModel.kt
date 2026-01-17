@@ -8,15 +8,14 @@ import com.fsa_profgroep_4.vroomly.data.reservation.ReservationRepository
 import com.fsa_profgroep_4.vroomly.data.user.UserRepository
 import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
+import com.fsa_profgroep_4.vroomly.navigation.ReviewReservation
 import com.fsa_profgroep_4.vroomly.ui.base.BaseViewModel
 import com.fsa_profgroep_4.vroomly.ui.components.ReservationCardData
 import com.fsa_profgroep_4.vroomly.ui.components.VehicleCardUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
 
 data class ReservationsCardState (
     val items: List<ReservationCardData> = emptyList(),
@@ -95,6 +94,9 @@ class ReservationViewModel(
 
     fun onCancel() {
         navigator.goBack()
+    }
+    fun onReservationSelected(reservationId: Int) {
+        navigator.goTo(ReviewReservation(reservationId))
     }
 }
 

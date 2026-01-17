@@ -6,6 +6,7 @@ import com.fsa_profgroep_4.vroomly.data.reservation.ReservationRepository
 import com.fsa_profgroep_4.vroomly.data.user.UserRepository
 import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
+import com.fsa_profgroep_4.vroomly.navigation.ReservationsOverview
 import com.fsa_profgroep_4.vroomly.ui.base.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,6 +28,9 @@ data class CreateReservationUiState(
 
     val startDate: LocalDate? = null,
     val endDate: LocalDate? = null,
+
+    val costPerDay: Double? = null,
+    val totalCost: Double? = null,
 
     val isSubmitting: Boolean = false,
     val submitSuccess: Boolean = false
@@ -69,7 +73,9 @@ class CreateReservationViewModel(
                             ?.mapNotNull { it.url.takeIf { u -> u.isNotBlank() } }
                             .orEmpty(),
                         startDate = today,
-                        endDate = today
+                        endDate = today,
+                        costPerDay = v.costPerDay,
+                        totalCost = v.costPerDay
                     )
                 }
                 .onFailure { e ->
@@ -88,6 +94,7 @@ class CreateReservationViewModel(
             startDate = date,
             endDate = if (end != null && end < date) date else end
         )
+        recalcTotal()
     }
 
     fun setEndDate(date: LocalDate) {
@@ -95,6 +102,7 @@ class CreateReservationViewModel(
         _uiState.value = _uiState.value.copy(
             endDate = if (start != null && date < start) start else date
         )
+        recalcTotal()
     }
 
     fun submit() {
@@ -123,7 +131,7 @@ class CreateReservationViewModel(
                         Log.d(TAG, "reservationRepository.createReservation onSuccess")
                         _uiState.value =
                             _uiState.value.copy(isSubmitting = false, submitSuccess = true)
-                        navigator.goBack()
+                        navigator.goTo(ReservationsOverview)
                     }.onFailure { e ->
                         Log.d(TAG, "reservationRepository.createReservation onFailure")
                         _uiState.value = _uiState.value.copy(
@@ -137,4 +145,15 @@ class CreateReservationViewModel(
     }
 
     fun onCancel() = navigator.goBack()
+
+    private fun recalcTotal() {
+        val s = _uiState.value
+        val start = s.startDate
+        val end = s.endDate
+        val cpd = s.costPerDay
+        if (start != null && end != null && cpd != null) {
+            val days = (end.toEpochDays() - start.toEpochDays() + 1).coerceAtLeast(1)
+            _uiState.value = s.copy(totalCost = days * cpd)
+        }
+    }
 }
