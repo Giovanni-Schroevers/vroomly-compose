@@ -22,8 +22,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.LocalDate
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.flow.filterNotNull
 
 data class DriveUiState(
     val hasLocationPermission: Boolean = false,
@@ -35,6 +37,7 @@ data class DriveUiState(
     val hasActiveReservation: Boolean = false
 )
 
+@OptIn(ExperimentalTime::class, kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 class DriveViewModel(
     private val navigator: Navigator,
     private val application: Application,
@@ -47,6 +50,7 @@ class DriveViewModel(
     val uiState: StateFlow<DriveUiState> = _uiState.asStateFlow()
 
     private var timerJob: Job? = null
+    private var reservationJob: Job? = null
 
     init {
         checkPermissions()
@@ -71,23 +75,22 @@ class DriveViewModel(
         }
     }
 
-    @OptIn(ExperimentalTime::class)
-    private suspend fun checkActiveReservation(userId: Int) {
-        _uiState.value = _uiState.value.copy(isLoading = true)
-        val result = reservationRepository.getReservationsByRenterId(userId)
-        
-        val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-        
-        val hasActive = result.getOrNull()?.any { reservation ->
-            val start = reservation.startDate
-            val end = reservation.endDate
-            today in start..end
-        } ?: false
-        
-        _uiState.value = _uiState.value.copy(
-            hasActiveReservation = hasActive,
-            isLoading = false
-        )
+    private fun checkActiveReservation(userId: Int) {
+        reservationJob?.cancel()
+        reservationJob = viewModelScope.launch {
+            reservationRepository.getReservationsByRenterId(userId).collect { reservations ->
+                val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+                val hasActive = reservations.any { reservation ->
+                    val start = LocalDate.parse(reservation.startDate)
+                    val end = LocalDate.parse(reservation.endDate)
+                    today in start..end
+                }
+                _uiState.value = _uiState.value.copy(
+                    hasActiveReservation = hasActive,
+                    isLoading = false
+                )
+            }
+        }
     }
 
     @SuppressLint("DefaultLocale")
