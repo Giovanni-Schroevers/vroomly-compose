@@ -1,6 +1,7 @@
 package com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.register
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,6 +33,7 @@ fun RegisterCarScreen(
             .fillMaxSize()
             .padding(horizontal = MaterialTheme.spacing.screenPadding),
         topBar = { VroomlyBackButton(onBackClicked = { viewModel.onBackClicked() }) },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         content = { padding ->
             Column(
                 modifier = Modifier

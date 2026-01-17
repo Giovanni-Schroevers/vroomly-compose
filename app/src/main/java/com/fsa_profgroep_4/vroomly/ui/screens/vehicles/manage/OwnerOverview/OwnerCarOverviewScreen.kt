@@ -3,6 +3,7 @@ package com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.OwnerOverview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -44,6 +45,7 @@ fun OwnerCarOverviewScreen(
         topBar = {
             VroomlyBackButton(onBackClicked = { viewModel.onBackClicked() })
         },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             VroomlyBottomBar(
                 currentRoute = currentRoute,

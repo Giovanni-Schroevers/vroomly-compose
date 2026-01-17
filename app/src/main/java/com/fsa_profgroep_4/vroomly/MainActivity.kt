@@ -62,10 +62,13 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
         enableEdgeToEdge()
         setContent {
             VroomlyTheme {
-                Scaffold { paddingValues ->
+                Scaffold(
+                    contentWindowInsets = WindowInsets(0, 0, 0, 0)
+                ) { paddingValues ->
                     NavDisplay(
                         backStack = navigator.backStack,
-                        modifier = Modifier.padding(paddingValues),
+                        modifier = Modifier
+                            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top)),
                         onBack = { navigator.goBack() },
                         entryProvider = getEntryProvider()
                     )
