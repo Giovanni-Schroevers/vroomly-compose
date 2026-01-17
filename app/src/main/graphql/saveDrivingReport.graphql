@@ -1,0 +1,5 @@
+mutation SaveDrivingReport(
+    $drivingReport: DrivingReportInput!
+) {
+    saveDrivingReport(input: $drivingReport)
+}

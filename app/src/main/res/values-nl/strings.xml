@@ -83,4 +83,22 @@
     <string name="add_image">Afbeelding toevoegen</string>
     <string name="manage_my_cars">Beheer mijn auto\'s</string>
     <string name="no_cars_registered">Nog geen auto\'s geregistreerd</string>
+    <string name="start_tracking">Begin met volgen</string>
+    <string name="open_settings">Open Instellingen</string>
+    <string name="track_your_drive">Volg uw rit</string>
+    <string name="vroomly_drive_tracking">Vroomly-ritregistratie</string>
+    <string name="tracking_your_drive_in_the_background">Uw rit wordt op de achtergrond bijgehouden...</string>
+    <string name="processing_your_drive_data">Uw rit word verwerkt...</string>
+    <string name="your_drive_has_been_successfully_uploaded">Uw rit is succesvol geüpload.</string>
+    <string name="drive_tracking_requires_location_permission_to_work_accurately_in_the_background">Om nauwkeurig op de achtergrond te kunnen werken, heeft Drive Tracking locatiegegevens nodig.</string>
+    <string name="grant_location_permission">Locatietoestemming verlenen</string>
+    <string name="uploading_your_drive_data_to_the_server">Uw ritgegevens worden naar de server geüpload...</string>
+    <string name="stop_tracking">Stop met volgen</string>
+    <string name="we_are_tracking_your_location">We volgen uw locatie...</string>
+    <string name="ready_to_start_tracking_your_drive">Klaar om uw rit te volgen.</string>
+    <string name="search_for_a_vehicle">Zoek een voertuig</string>
+    <string name="you_can_only_track_a_drive_when_you_have_an_active_reservation_for_today">Je kunt alleen een rit volgen als je een actieve reservering voor vandaag hebt.</string>
+    <string name="no_active_reservation">Geen actieve reservering</string>
+    <string name="go_to_home">Ga naar Home</string>
+    <string name="drive_saved">Rit opgeslagen!</string>
 </resources>

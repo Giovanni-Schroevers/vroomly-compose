@@ -14,6 +14,8 @@ import com.fsa_profgroep_4.vroomly.data.network.ApolloAuthorizationInterceptor
 import com.fsa_profgroep_4.vroomly.data.local.UserDao
 import com.fsa_profgroep_4.vroomly.data.user.UserRepository
 import com.fsa_profgroep_4.vroomly.data.user.UserRepositoryImpl
+import com.fsa_profgroep_4.vroomly.data.reservation.ReservationRepository
+import com.fsa_profgroep_4.vroomly.data.reservation.ReservationRepositoryImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import org.koin.core.module.dsl.bind
@@ -44,4 +46,5 @@ val dataModule = module {
     singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
     singleOf(::UserRepositoryImpl) { bind<UserRepository>() }
     singleOf(::VehicleRepositoryImpl) { bind<VehicleRepository>() }
+    singleOf(::ReservationRepositoryImpl) { bind<ReservationRepository>() }
 }

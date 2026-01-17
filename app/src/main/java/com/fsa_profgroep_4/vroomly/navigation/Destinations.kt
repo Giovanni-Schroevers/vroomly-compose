@@ -29,3 +29,6 @@ object VehiclesOverview : NavKey
 
 @Serializable
 object OwnerCarOverview : NavKey
+
+@Serializable
+object Drive : NavKey

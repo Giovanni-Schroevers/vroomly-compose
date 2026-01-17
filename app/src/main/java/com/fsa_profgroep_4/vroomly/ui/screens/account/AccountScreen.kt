@@ -35,15 +35,14 @@ import com.fsa_profgroep_4.vroomly.ui.theme.spacing
 
 @Composable
 fun AccountScreen(
-    modifier: Modifier = Modifier,
-    viewModel: AccountViewModel
+    viewModel: AccountViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var currentRoute by remember { mutableStateOf("account") }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         bottomBar = {
             VroomlyBottomBar(
                 currentRoute = currentRoute,
