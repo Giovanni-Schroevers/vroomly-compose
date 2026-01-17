@@ -128,7 +128,7 @@ fun ReservationListItem(
             Text(
                 text = formatEuroNl(data.totalCost),
                 style = MaterialTheme.typography.titleMedium,
-                color = Color(0xFFE9EEF5),
+                color = Color(0xFF030303),
                 maxLines = 1,
                 overflow = TextOverflow.Clip
             )

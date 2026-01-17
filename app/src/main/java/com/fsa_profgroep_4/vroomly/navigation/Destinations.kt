@@ -41,3 +41,6 @@ data class CreateReservation(val vehicleId: Int) : NavKey
 
 @Serializable
 data class EditCar(val vehicleId: Int) : NavKey
+
+@Serializable
+data class ReviewReservation(val reservationId: Int) : NavKey
