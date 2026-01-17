@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.size
+import androidx.compose.ui.draw.shadow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -64,7 +65,7 @@ fun VroomlyBottomBar(
     )
 
     NavigationBar(
-        modifier = modifier,
+        modifier = modifier.shadow(elevation = 12.dp),
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
         windowInsets = WindowInsets.navigationBars
