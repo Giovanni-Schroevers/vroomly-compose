@@ -451,12 +451,16 @@ class VehicleRepositoryImpl(
         imageBytes: ByteArray,
         imageNumber: Int?
     ): Result<String> {
+        Log.d(TAG, "uploadAndAddImageToVehicle: vehicleId=$vehicleId, bytes=${imageBytes.size}, number=$imageNumber")
         return runCatching {
             // Upload image to Supabase Storage
+            Log.d(TAG, "Starting Supabase upload...")
             val uploadResult = imageStorageService.uploadVehicleImage(vehicleId, imageBytes)
             val imageUrl = uploadResult.getOrThrow()
+            Log.d(TAG, "Supabase upload successful: $imageUrl")
 
             // Add image URL to vehicle via GraphQL
+            Log.d(TAG, "Adding image to vehicle via GraphQL...")
             val response = withContext(Dispatchers.IO) {
                 apolloClient.query(
                     AddImageToVehicleQuery(
@@ -469,9 +473,11 @@ class VehicleRepositoryImpl(
 
             if (response.hasErrors()) {
                 val errorMsg = response.errors?.first()?.message ?: "Unknown error adding image"
+                Log.e(TAG, "GraphQL error: $errorMsg")
                 throw Exception(errorMsg)
             }
 
+            Log.d(TAG, "Image added to vehicle successfully")
             imageUrl
         }.also { result ->
             result.onFailure { e ->

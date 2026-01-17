@@ -2,6 +2,7 @@ package com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.edit
 
 import android.app.Application
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fsa_profgroep_4.vroomly.R
@@ -13,6 +14,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
+private const val TAG = "EditCarViewModel"
 
 data class EditCarUiState(
     val licensePlate: FormField = FormField(),
@@ -162,37 +165,46 @@ class EditCarViewModel(
     }
 
     private suspend fun uploadNewImage(uri: Uri) {
+        Log.d(TAG, "uploadNewImage called with uri: $uri, vehicleId: $vehicleId")
         val contentResolver = application.contentResolver
         try {
             val inputStream = contentResolver.openInputStream(uri)
             val imageBytes = inputStream?.readBytes()
             inputStream?.close()
 
-            if (imageBytes != null) {
+            Log.d(TAG, "Image bytes read: ${imageBytes?.size ?: 0} bytes")
+
+            if (imageBytes != null && imageBytes.isNotEmpty()) {
                 val nextImageNumber = _uiState.value.existingImageUrls.size + _uiState.value.selectedImageUris.size
+                Log.d(TAG, "Uploading as image number: $nextImageNumber")
+
                 val result = vehicleRepository.uploadAndAddImageToVehicle(
                     vehicleId = vehicleId,
                     imageBytes = imageBytes,
                     imageNumber = nextImageNumber
                 )
                 result.onSuccess { imageUrl ->
+                    Log.d(TAG, "Upload successful: $imageUrl")
                     _uiState.value = _uiState.value.copy(
                         existingImageUrls = _uiState.value.existingImageUrls + imageUrl,
                         isUploadingImage = false
                     )
-                }.onFailure {
+                }.onFailure { e ->
+                    Log.e(TAG, "Upload failed", e)
                     _uiState.value = _uiState.value.copy(
                         isUploadingImage = false,
                         generalError = application.getString(R.string.image_upload_failed)
                     )
                 }
             } else {
+                Log.e(TAG, "Failed to read image bytes from URI")
                 _uiState.value = _uiState.value.copy(
                     isUploadingImage = false,
                     generalError = application.getString(R.string.image_upload_failed)
                 )
             }
         } catch (e: Exception) {
+            Log.e(TAG, "Exception while uploading image", e)
             _uiState.value = _uiState.value.copy(
                 isUploadingImage = false,
                 generalError = application.getString(R.string.image_upload_failed)

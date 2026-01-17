@@ -2,6 +2,7 @@ package com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.register
 
 import android.app.Application
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fsa_profgroep_4.vroomly.R
@@ -13,6 +14,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
+private const val TAG = "RegisterCarViewModel"
 
 data class RegisterCarUiState(
     val licensePlate: FormField = FormField(),
@@ -252,26 +255,37 @@ class RegisterCarViewModel(
     }
 
     private suspend fun uploadImages(vehicleId: Int) {
+        Log.d(TAG, "uploadImages called for vehicleId: $vehicleId, imageCount: ${_uiState.value.selectedImageUris.size}")
         val contentResolver = application.contentResolver
         var hasError = false
 
         _uiState.value.selectedImageUris.forEachIndexed { index, uri ->
+            Log.d(TAG, "Processing image $index: $uri")
             try {
                 val inputStream = contentResolver.openInputStream(uri)
                 val imageBytes = inputStream?.readBytes()
                 inputStream?.close()
 
-                if (imageBytes != null) {
+                Log.d(TAG, "Image $index bytes read: ${imageBytes?.size ?: 0}")
+
+                if (imageBytes != null && imageBytes.isNotEmpty()) {
                     val result = vehicleRepository.uploadAndAddImageToVehicle(
                         vehicleId = vehicleId,
                         imageBytes = imageBytes,
                         imageNumber = index
                     )
                     if (result.isFailure) {
+                        Log.e(TAG, "Failed to upload image $index", result.exceptionOrNull())
                         hasError = true
+                    } else {
+                        Log.d(TAG, "Successfully uploaded image $index: ${result.getOrNull()}")
                     }
+                } else {
+                    Log.e(TAG, "Image $index has no bytes")
+                    hasError = true
                 }
             } catch (e: Exception) {
+                Log.e(TAG, "Exception uploading image $index", e)
                 hasError = true
             }
         }

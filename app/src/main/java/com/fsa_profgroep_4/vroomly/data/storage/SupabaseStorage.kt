@@ -1,10 +1,13 @@
 package com.fsa_profgroep_4.vroomly.data.storage
 
+import android.util.Log
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.storage.Storage
 import io.github.jan.supabase.storage.storage
 import java.util.UUID
+
+private const val TAG = "ImageStorageService"
 
 object SupabaseConfig {
     const val SUPABASE_URL = "https://rfpeflpyaztxbzqfaoel.supabase.co"
@@ -20,13 +23,20 @@ class ImageStorageService(
             val fileName = "${UUID.randomUUID()}.jpg"
             val path = "vehicle-$vehicleId/$fileName"
 
+            Log.d(TAG, "Uploading image to path: $path, size: ${imageBytes.size} bytes")
+
             supabaseClient.storage
                 .from(SupabaseConfig.BUCKET_NAME)
                 .upload(path, imageBytes)
 
-            supabaseClient.storage
+            val publicUrl = supabaseClient.storage
                 .from(SupabaseConfig.BUCKET_NAME)
                 .publicUrl(path)
+
+            Log.d(TAG, "Upload successful, URL: $publicUrl")
+            publicUrl
+        }.onFailure { e ->
+            Log.e(TAG, "Upload failed", e)
         }
     }
 }
