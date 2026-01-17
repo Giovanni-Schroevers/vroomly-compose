@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +26,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.Text
@@ -57,6 +58,12 @@ import com.fsa_profgroep_4.vroomly.ui.models.FormField
 import com.fsa_profgroep_4.vroomly.ui.theme.spacing
 import java.io.File
 
+data class VehicleImage(
+    val id: Int,
+    val url: String,
+    val number: Int
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VehicleForm(
@@ -76,9 +83,11 @@ fun VehicleForm(
     address: FormField,
     isLoading: Boolean,
     selectedImageUris: List<Uri> = emptyList(),
-    existingImageUrls: List<String> = emptyList(),
+    existingImages: List<VehicleImage> = emptyList(),
     isUploadingImage: Boolean = false,
     onImageSelected: (Uri) -> Unit = {},
+    onRemoveSelectedImage: (Uri) -> Unit = {},
+    onRemoveExistingImage: (VehicleImage) -> Unit = {},
     onLicensePlateChange: (String) -> Unit,
     onBrandChange: (String) -> Unit,
     onModelChange: (String) -> Unit,
@@ -177,7 +186,7 @@ fun VehicleForm(
             errorText = licensePlate.error
         )
 
-        val allImages = existingImageUrls + selectedImageUris.map { it.toString() }
+        val hasImages = existingImages.isNotEmpty() || selectedImageUris.isNotEmpty()
 
         Box(
             modifier = Modifier
@@ -200,7 +209,7 @@ fun VehicleForm(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-            } else if (allImages.isEmpty()) {
+            } else if (!hasImages) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
                         painter = painterResource(R.drawable.ic_directions_car),
@@ -221,19 +230,77 @@ fun VehicleForm(
                         .padding(8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(allImages) { imageSource ->
-                        AsyncImage(
-                            model = imageSource,
-                            contentDescription = null,
+                    items(existingImages) { image ->
+                        Box(
                             modifier = Modifier
                                 .fillParentMaxHeight()
                                 .aspectRatio(1f)
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(MaterialTheme.colorScheme.surfaceVariant),
-                            contentScale = ContentScale.Crop,
-                            placeholder = painterResource(R.drawable.ic_directions_car),
-                            error = painterResource(R.drawable.ic_directions_car)
-                        )
+                        ) {
+                            AsyncImage(
+                                model = image.url,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                                contentScale = ContentScale.Crop,
+                                placeholder = painterResource(R.drawable.ic_directions_car),
+                                error = painterResource(R.drawable.ic_directions_car)
+                            )
+                            IconButton(
+                                onClick = { onRemoveExistingImage(image) },
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(4.dp)
+                                    .size(24.dp),
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    containerColor = MaterialTheme.colorScheme.error,
+                                    contentColor = MaterialTheme.colorScheme.onError
+                                )
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.outline_close_24),
+                                    contentDescription = "Remove image",
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
+                        }
+                    }
+                    items(selectedImageUris) { uri ->
+                        Box(
+                            modifier = Modifier
+                                .fillParentMaxHeight()
+                                .aspectRatio(1f)
+                        ) {
+                            AsyncImage(
+                                model = uri,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                                contentScale = ContentScale.Crop,
+                                placeholder = painterResource(R.drawable.ic_directions_car),
+                                error = painterResource(R.drawable.ic_directions_car)
+                            )
+                            IconButton(
+                                onClick = { onRemoveSelectedImage(uri) },
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(4.dp)
+                                    .size(24.dp),
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    containerColor = MaterialTheme.colorScheme.error,
+                                    contentColor = MaterialTheme.colorScheme.onError
+                                )
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.outline_close_24),
+                                    contentDescription = "Remove image",
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
+                        }
                     }
                 }
             }

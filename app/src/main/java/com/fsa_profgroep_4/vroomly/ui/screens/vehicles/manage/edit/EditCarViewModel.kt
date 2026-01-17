@@ -10,6 +10,7 @@ import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
 import com.fsa_profgroep_4.vroomly.ui.models.FormField
 import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.common.VehicleFormValidator
+import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.common.VehicleImage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,7 +38,7 @@ data class EditCarUiState(
     val isLoading: Boolean = false,
     val isLoadingVehicle: Boolean = true,
     val generalError: String? = null,
-    val existingImageUrls: List<String> = emptyList(),
+    val existingImages: List<VehicleImage> = emptyList(),
     val selectedImageUris: List<Uri> = emptyList(),
     val isUploadingImage: Boolean = false
 ) {
@@ -73,7 +74,11 @@ class EditCarViewModel(
                     }
                     val existingImages = vehicle.images
                         .sortedBy { it.number }
-                        .map { it.url }
+                        .mapNotNull { img ->
+                            img.id?.let { id ->
+                                VehicleImage(id = id, url = img.url, number = img.number)
+                            }
+                        }
                     _uiState.value = _uiState.value.copy(
                         licensePlate = FormField(value = vehicle.licensePlate),
                         brand = FormField(value = vehicle.brand),
@@ -91,7 +96,7 @@ class EditCarViewModel(
                         address = FormField(value = vehicle.location?.address ?: ""),
                         latitude = FormField(value = vehicle.location?.latitude?.toString() ?: "52.3676"),
                         longitude = FormField(value = vehicle.location?.longitude?.toString() ?: "4.9041"),
-                        existingImageUrls = existingImages,
+                        existingImages = existingImages,
                         isLoadingVehicle = false
                     )
                 }
@@ -168,6 +173,26 @@ class EditCarViewModel(
         }
     }
 
+    fun onRemoveExistingImage(image: VehicleImage) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isUploadingImage = true)
+            vehicleRepository.removeImageFromVehicle(vehicleId, image.id)
+                .onSuccess {
+                    _uiState.value = _uiState.value.copy(
+                        existingImages = _uiState.value.existingImages.filter { it.id != image.id },
+                        isUploadingImage = false
+                    )
+                }
+                .onFailure { e ->
+                    Log.e(TAG, "Failed to remove image", e)
+                    _uiState.value = _uiState.value.copy(
+                        isUploadingImage = false,
+                        generalError = application.getString(R.string.image_upload_failed)
+                    )
+                }
+        }
+    }
+
     private suspend fun uploadNewImage(uri: Uri) {
         Log.d(TAG, "uploadNewImage called with uri: $uri, vehicleId: $vehicleId")
         val contentResolver = application.contentResolver
@@ -179,7 +204,7 @@ class EditCarViewModel(
             Log.d(TAG, "Image bytes read: ${imageBytes?.size ?: 0} bytes")
 
             if (imageBytes != null && imageBytes.isNotEmpty()) {
-                val nextImageNumber = _uiState.value.existingImageUrls.size + _uiState.value.selectedImageUris.size
+                val nextImageNumber = _uiState.value.existingImages.size + _uiState.value.selectedImageUris.size
                 Log.d(TAG, "Uploading as image number: $nextImageNumber")
 
                 val result = vehicleRepository.uploadAndAddImageToVehicle(
@@ -189,8 +214,13 @@ class EditCarViewModel(
                 )
                 result.onSuccess { imageUrl ->
                     Log.d(TAG, "Upload successful: $imageUrl")
+                    val newImage = VehicleImage(
+                        id = 0,
+                        url = imageUrl,
+                        number = nextImageNumber
+                    )
                     _uiState.value = _uiState.value.copy(
-                        existingImageUrls = _uiState.value.existingImageUrls + imageUrl,
+                        existingImages = _uiState.value.existingImages + newImage,
                         isUploadingImage = false
                     )
                 }.onFailure { e ->

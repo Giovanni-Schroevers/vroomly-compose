@@ -6,6 +6,7 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.example.rocketreserver.AddImageToVehicleQuery
 import com.example.rocketreserver.AvailableVehiclesQuery
+import com.example.rocketreserver.RemoveImageFromVehicleMutation
 import com.example.rocketreserver.CreateVehicleQuery
 import com.example.rocketreserver.DeleteVehicleMutation
 import com.example.rocketreserver.UpdateVehicleMutation
@@ -93,6 +94,11 @@ interface VehicleRepository {
         imageBytes: ByteArray,
         imageNumber: Int?
     ): Result<String>
+
+    suspend fun removeImageFromVehicle(
+        vehicleId: Int,
+        imageId: Int
+    ): Result<Unit>
 }
 
 private const val TAG = "VehicleRepository"
@@ -482,6 +488,36 @@ class VehicleRepositoryImpl(
         }.also { result ->
             result.onFailure { e ->
                 Log.e(TAG, "uploadAndAddImageToVehicle() failed with exception", e)
+            }
+        }
+    }
+
+    override suspend fun removeImageFromVehicle(
+        vehicleId: Int,
+        imageId: Int
+    ): Result<Unit> {
+        Log.d(TAG, "removeImageFromVehicle: vehicleId=$vehicleId, imageId=$imageId")
+        return runCatching {
+            val response = withContext(Dispatchers.IO) {
+                apolloClient.mutation(
+                    RemoveImageFromVehicleMutation(
+                        vehicleId = vehicleId,
+                        imageId = imageId
+                    )
+                ).execute()
+            }
+
+            if (response.hasErrors()) {
+                val errorMsg = response.errors?.first()?.message ?: "Unknown error removing image"
+                Log.e(TAG, "GraphQL error: $errorMsg")
+                throw Exception(errorMsg)
+            }
+
+            Log.d(TAG, "Image removed from vehicle successfully")
+            Unit
+        }.also { result ->
+            result.onFailure { e ->
+                Log.e(TAG, "removeImageFromVehicle() failed with exception", e)
             }
         }
     }

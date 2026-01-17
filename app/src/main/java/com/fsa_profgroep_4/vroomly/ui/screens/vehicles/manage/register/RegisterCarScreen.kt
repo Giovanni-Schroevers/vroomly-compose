@@ -76,6 +76,7 @@ fun RegisterCarScreen(
                     selectedImageUris = uiState.selectedImageUris,
                     isUploadingImage = uiState.isUploadingImage,
                     onImageSelected = viewModel::onImageSelected,
+                    onRemoveSelectedImage = viewModel::onRemoveSelectedImage,
                     onLicensePlateChange = viewModel::onLicensePlateChange,
                     onBrandChange = viewModel::onBrandChange,
                     onModelChange = viewModel::onModelChange,

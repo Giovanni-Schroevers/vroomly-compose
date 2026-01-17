@@ -117,6 +117,12 @@ class RegisterCarViewModel(
         )
     }
 
+    fun onRemoveSelectedImage(uri: Uri) {
+        _uiState.value = _uiState.value.copy(
+            selectedImageUris = _uiState.value.selectedImageUris.filter { it != uri }
+        )
+    }
+
     fun onLatitudeChange(value: String) {
         _uiState.value = _uiState.value.copy(latitude = _uiState.value.latitude.copy(value = value, error = null))
     }
