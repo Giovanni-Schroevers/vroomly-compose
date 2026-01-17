@@ -1,6 +1,5 @@
 package com.fsa_profgroep_4.vroomly.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -34,20 +33,13 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun VroomlyTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-//      @Todo: Nakijken wat dynamicColor doet en hoe we het zouden kunnen gebruiken
-//      dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-//        val context = LocalContext.current
-//        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-//      }
-      darkTheme -> DarkColorScheme
-      else -> LightColorScheme
-    }
+    // Always use light theme - dark theme disabled
+    val colorScheme = LightColorScheme
 
     CompositionLocalProvider(LocalSpacing provides Spacing()) {
         MaterialTheme(

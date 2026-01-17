@@ -78,6 +78,13 @@
     <string name="vin_is_required">VIN is required</string>
     <string name="zero_to_hundred_is_required">0-100 time is required</string>
     <string name="address_is_required">Address is required</string>
+    <string name="invalid_license_plate_format">Invalid license plate format</string>
+    <string name="invalid_year">Invalid year</string>
+    <string name="invalid_seats">Seats must be between 1 and 50</string>
+    <string name="invalid_cost_per_day">Invalid cost per day</string>
+    <string name="invalid_odometer">Invalid odometer value</string>
+    <string name="invalid_vin_format">VIN is invalid</string>
+    <string name="invalid_zero_to_hundred">Invalid 0-100 value</string>
     <string name="vehicle_registration_failed">Vehicle registration failed</string>
     <string name="select_category">Select category</string>
     <string name="select_engine_type">Select engine type</string>
@@ -91,4 +98,7 @@
     <string name="status">Status</string>
     <string name="delete_vehicle">Delete vehicle</string>
     <string name="delete_vehicle_confirmation">Are you sure you want to delete this vehicle? This action cannot be undone.</string>
+    <string name="edit_car">Edit car</string>
+    <string name="edit_car_subtitle">Update your vehicle details.</string>
+    <string name="vehicle_update_failed">Vehicle update failed</string>
 </resources>

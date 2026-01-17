@@ -1,6 +1,7 @@
 package com.fsa_profgroep_4.vroomly.ui.screens.home
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -25,7 +26,7 @@ fun HomeScreen(
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
-
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             VroomlyBottomBar(
                 currentRoute = currentRoute,

@@ -1,8 +1,11 @@
 package com.fsa_profgroep_4.vroomly.di
 
+import com.fsa_profgroep_4.vroomly.navigation.EditCar
 import com.fsa_profgroep_4.vroomly.navigation.OwnerCarDetail
 import com.fsa_profgroep_4.vroomly.navigation.OwnerCarOverview
 import com.fsa_profgroep_4.vroomly.navigation.VehiclesOverview
+import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.edit.EditCarScreen
+import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.edit.EditCarViewModel
 import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.Overview.VehiclesOverviewScreen
 import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.Overview.VehiclesViewModel
 import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.OwnerDetail.OwnerCarDetailScreen
@@ -23,11 +26,15 @@ val carModule = module {
         viewModel { VehiclesViewModel(get(), get(), androidApplication()) }
         viewModel { OwnerCarOverviewViewModel(get(), get(), get()) }
         viewModel { (vehicleId: Int) -> OwnerCarDetailViewModel(get(), get(), vehicleId) }
+        viewModel { (vehicleId: Int) -> EditCarViewModel(get(), get(), androidApplication(), vehicleId) }
 
         navigation<VehiclesOverview> { VehiclesOverviewScreen(viewModel = get()) }
         navigation<OwnerCarOverview> { OwnerCarOverviewScreen(viewModel = get()) }
         navigation<OwnerCarDetail> { destination ->
             OwnerCarDetailScreen(viewModel = get { parametersOf(destination.vehicleId) })
+        }
+        navigation<EditCar> { destination ->
+            EditCarScreen(viewModel = get { parametersOf(destination.vehicleId) })
         }
     }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.rocketreserver.GetReservationsByVehicleIdQuery
 import com.example.rocketreserver.GetVehicleByIdQuery
 import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
+import com.fsa_profgroep_4.vroomly.navigation.EditCar
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
 import com.fsa_profgroep_4.vroomly.ui.base.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -71,6 +72,10 @@ class OwnerCarDetailViewModel(
 
     fun onBackClicked() {
         navigator.goBack()
+    }
+
+    fun onEditCarClicked() {
+        navigator.goTo(EditCar(vehicleId))
     }
 
     fun showDeleteConfirmation() {
