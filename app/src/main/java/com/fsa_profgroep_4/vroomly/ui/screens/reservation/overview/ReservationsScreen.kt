@@ -1,5 +1,6 @@
 package com.fsa_profgroep_4.vroomly.ui.screens.reservation.overview
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -19,6 +21,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
@@ -79,7 +83,20 @@ fun ReservationOverviewScreen(
 
                 ReservationList(
                     items = displayItems,
+                    hasMore = state.hasMore,
+                    isLoading = state.isLoading,
+                    onLoadMore = { viewModel.onLoadMore() },
                 )
+                if (state.isLoading && displayItems.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clickable(enabled = false) {},
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
                 }
             }
         }
@@ -88,9 +105,17 @@ fun ReservationOverviewScreen(
 
 @Composable
 fun ReservationList(
-    items: List<ReservationCardData>
+    items: List<ReservationCardData>,
+    hasMore: Boolean,
+    isLoading: Boolean,
+    onLoadMore: () -> Unit,
 ) {
     val listState = rememberLazyListState()
+
+    LaunchedEffect(isLoading, hasMore) {
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1 }
+            .collect { if (hasMore) onLoadMore() }
+    }
 
     LazyColumn(
         state = listState,

@@ -1,5 +1,6 @@
 package com.fsa_profgroep_4.vroomly.data.reservation
 
+import android.util.Log
 import com.apollographql.apollo.ApolloClient
 import com.example.rocketreserver.CreateReservationQuery
 import com.example.rocketreserver.DeleteReservationQuery
@@ -29,6 +30,8 @@ interface ReservationRepository {
     suspend fun deleteReservation(reservationId: Int): Result<ReservationEntity>
 }
 
+private const val TAG = "ReservationRepository"
+
 class ReservationRepositoryImpl(
     private val apolloClient: ApolloClient,
     private val reservationDao: ReservationDao
@@ -41,6 +44,8 @@ class ReservationRepositoryImpl(
         endDate: kotlinx.datetime.LocalDate
     ): Result<ReservationEntity> = withContext(Dispatchers.IO) {
         runCatching {
+            Log.d(TAG, "ReservationRepositoryImpl.createReservation START")
+
             val response = apolloClient.query(
                 CreateReservationQuery(
                     vehicleId = vehicleId,
@@ -59,6 +64,9 @@ class ReservationRepositoryImpl(
 
             val entity = r.toEntity()
             reservationDao.upsert(entity)
+
+            Log.d(TAG, "ReservationRepositoryImpl.createReservation END")
+
             entity
         }
     }
@@ -104,6 +112,7 @@ class ReservationRepositoryImpl(
     override fun getReservationsByRenterId(renterId: Int): Flow<List<ReservationEntity>> {
         return reservationDao.observeByRenterId(renterId)
             .onStart {
+                Log.d(TAG, "ReservationRepositoryImpl.getReservationsByRenterId START")
                 withContext(Dispatchers.IO) {
                     val response = apolloClient
                         .query(GetReservationsByRenterIdQuery(renterId = renterId))
@@ -116,6 +125,7 @@ class ReservationRepositoryImpl(
                         ?: emptyList()
 
                     reservationDao.upsertAll(entities)
+                    Log.d(TAG, "ReservationRepositoryImpl.getReservationsByRenterId END")
                 }
             }
     }

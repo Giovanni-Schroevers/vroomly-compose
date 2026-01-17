@@ -7,7 +7,6 @@ import com.fsa_profgroep_4.vroomly.data.auth.AuthRepositoryImpl
 import com.fsa_profgroep_4.vroomly.data.local.AppDatabase
 import com.fsa_profgroep_4.vroomly.data.adapter.DateAdapter
 import com.example.rocketreserver.type.Date
-import com.fsa_profgroep_4.vroomly.data.local.ReservationDao
 import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
 import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepositoryImpl
 import com.fsa_profgroep_4.vroomly.data.network.AuthorizationInterceptor
@@ -15,8 +14,6 @@ import com.fsa_profgroep_4.vroomly.data.network.ApolloAuthorizationInterceptor
 import com.fsa_profgroep_4.vroomly.data.local.UserDao
 import com.fsa_profgroep_4.vroomly.data.reservation.ReservationRepository
 import com.fsa_profgroep_4.vroomly.data.reservation.ReservationRepositoryImpl
-import com.fsa_profgroep_4.vroomly.data.user.IdentityProvider
-import com.fsa_profgroep_4.vroomly.data.user.IdentityProviderImpl
 import com.fsa_profgroep_4.vroomly.data.user.UserRepository
 import com.fsa_profgroep_4.vroomly.data.user.UserRepositoryImpl
 import org.koin.android.ext.koin.androidContext
@@ -51,6 +48,4 @@ val dataModule = module {
     singleOf(::UserRepositoryImpl) { bind<UserRepository>() }
     singleOf(::VehicleRepositoryImpl) { bind<VehicleRepository>() }
     singleOf(::ReservationRepositoryImpl) { bind<ReservationRepository>() }
-
-    single<IdentityProvider> { IdentityProviderImpl(get()) }
 }
