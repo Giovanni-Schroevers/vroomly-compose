@@ -13,18 +13,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.fsa_profgroep_4.vroomly.R
 import com.fsa_profgroep_4.vroomly.ui.components.VroomlyBottomBar
+import com.fsa_profgroep_4.vroomly.ui.components.VroomlyButton
 import com.fsa_profgroep_4.vroomly.ui.theme.spacing
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
     viewModel: HomeViewModel
 ) {
     var currentRoute by remember { mutableStateOf("home") }
 
     Scaffold(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize(),
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
@@ -43,6 +45,10 @@ fun HomeScreen(
                     .padding(horizontal = MaterialTheme.spacing.screenPadding)
             ) {
                 Text("Home")
+                VroomlyButton(
+                    text = stringResource(R.string.track_your_drive),
+                    onClick = { viewModel.onTrackDrive() }
+                )
             }
         }
     )

@@ -23,6 +23,9 @@ mockk = "1.13.13"
 kotlinxCoroutinesTest = "1.10.1"
 turbine = "1.2.0"
 maplibreCompose = "0.12.1"
+playServicesLocation = "21.3.0"
+supabase = "3.1.4"
+ktor = "3.1.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -62,8 +65,11 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 maplibre-compose = { module = "org.maplibre.compose:maplibre-compose", version.ref = "maplibreCompose" }
 maplibre-composeMaterial3 = { module = "org.maplibre.compose:maplibre-compose-material3", version.ref = "maplibreCompose" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 
 maplibre-android = { module = "org.maplibre.gl:android-sdk", version.ref = "maplibre" }
+supabase-storage = { module = "io.github.jan-tennert.supabase:storage-kt", version.ref = "supabase" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -90,6 +90,11 @@
     <string name="select_engine_type">Select engine type</string>
     <string name="no_images">No images</string>
     <string name="add_image">Add image</string>
+    <string name="take_photo">Take photo</string>
+    <string name="choose_from_gallery">Choose from gallery</string>
+    <string name="uploading_image">Uploading image…</string>
+    <string name="image_upload_failed">Failed to upload image</string>
+    <string name="camera_permission_required">Camera permission is required to take photos</string>
     <string name="manage_my_cars">Manage my cars</string>
     <string name="no_cars_registered">No cars registered yet</string>
     <string name="reservations">Reservations</string>
@@ -101,4 +106,22 @@
     <string name="edit_car">Edit car</string>
     <string name="edit_car_subtitle">Update your vehicle details.</string>
     <string name="vehicle_update_failed">Vehicle update failed</string>
+    <string name="start_tracking">Start Tracking</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="track_your_drive">Track your drive</string>
+    <string name="vroomly_drive_tracking">Vroomly Drive Tracking</string>
+    <string name="tracking_your_drive_in_the_background">Tracking your drive in the background...</string>
+    <string name="processing_your_drive_data">Processing your drive data...</string>
+    <string name="your_drive_has_been_successfully_uploaded">Your drive has been successfully uploaded.</string>
+    <string name="drive_tracking_requires_location_permission_to_work_accurately_in_the_background">Drive tracking requires location permission to work accurately in the background.</string>
+    <string name="grant_location_permission">Grant Location Permission</string>
+    <string name="uploading_your_drive_data_to_the_server">Uploading your drive data to the server...</string>
+    <string name="stop_tracking">Stop Tracking</string>
+    <string name="we_are_tracking_your_location">We are tracking your location...</string>
+    <string name="ready_to_start_tracking_your_drive">Ready to start tracking your drive.</string>
+    <string name="search_for_a_vehicle">Search for a Vehicle</string>
+    <string name="you_can_only_track_a_drive_when_you_have_an_active_reservation_for_today">You can only track a drive when you have an active reservation for today.</string>
+    <string name="no_active_reservation">No Active Reservation</string>
+    <string name="go_to_home">Go to Home</string>
+    <string name="drive_saved">Drive Saved!</string>
 </resources>

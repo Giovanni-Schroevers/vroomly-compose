@@ -91,6 +91,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.maplibre.composeMaterial3)
     implementation(libs.maplibre.compose)
+    implementation(libs.play.services.location)
 
     kapt(libs.androidx.room.compiler)
     implementation(libs.kotlinx.datetime)
@@ -98,7 +99,9 @@ dependencies {
     implementation(libs.maplibre.android)
 
     implementation("io.coil-kt:coil-compose:2.6.0")
-    implementation("androidx.compose.material:material-icons-extended")
+
+    implementation(libs.supabase.storage)
+    implementation(libs.ktor.client.android)
 }
 
 apollo {

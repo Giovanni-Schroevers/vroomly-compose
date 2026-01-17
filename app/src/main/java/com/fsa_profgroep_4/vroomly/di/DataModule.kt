@@ -12,10 +12,12 @@ import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepositoryImpl
 import com.fsa_profgroep_4.vroomly.data.network.AuthorizationInterceptor
 import com.fsa_profgroep_4.vroomly.data.network.ApolloAuthorizationInterceptor
 import com.fsa_profgroep_4.vroomly.data.local.UserDao
-import com.fsa_profgroep_4.vroomly.data.reservation.ReservationRepository
-import com.fsa_profgroep_4.vroomly.data.reservation.ReservationRepositoryImpl
 import com.fsa_profgroep_4.vroomly.data.user.UserRepository
 import com.fsa_profgroep_4.vroomly.data.user.UserRepositoryImpl
+import com.fsa_profgroep_4.vroomly.data.reservation.ReservationRepository
+import com.fsa_profgroep_4.vroomly.data.reservation.ReservationRepositoryImpl
+import com.fsa_profgroep_4.vroomly.data.storage.ImageStorageService
+import com.fsa_profgroep_4.vroomly.data.storage.createSupabaseClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import org.koin.core.module.dsl.bind
@@ -48,4 +50,7 @@ val dataModule = module {
     singleOf(::UserRepositoryImpl) { bind<UserRepository>() }
     singleOf(::VehicleRepositoryImpl) { bind<VehicleRepository>() }
     singleOf(::ReservationRepositoryImpl) { bind<ReservationRepository>() }
+
+    single { createSupabaseClient() }
+    singleOf(::ImageStorageService)
 }
