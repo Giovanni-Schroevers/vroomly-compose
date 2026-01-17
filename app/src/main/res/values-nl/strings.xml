@@ -76,6 +76,13 @@
     <string name="vin_is_required">VIN is verplicht</string>
     <string name="zero_to_hundred_is_required">0-100 tijd is verplicht</string>
     <string name="address_is_required">Adres is verplicht</string>
+    <string name="invalid_license_plate_format">Ongeldig kenteken formaat</string>
+    <string name="invalid_year">Ongeldig jaar</string>
+    <string name="invalid_seats">Stoelen moet tussen 1 en 50 zijn</string>
+    <string name="invalid_cost_per_day">Ongeldige kosten per dag</string>
+    <string name="invalid_odometer">Ongeldige kilometerstand</string>
+    <string name="invalid_vin_format">VIN is ongeldig</string>
+    <string name="invalid_zero_to_hundred">Ongeldige 0-100 waarde</string>
     <string name="vehicle_registration_failed">Voertuigregistratie mislukt</string>
     <string name="select_category">Selecteer carrosserie</string>
     <string name="select_engine_type">Selecteer motortype</string>

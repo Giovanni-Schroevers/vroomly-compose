@@ -9,6 +9,7 @@ import com.fsa_profgroep_4.vroomly.R
 import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
 import com.fsa_profgroep_4.vroomly.ui.models.FormField
+import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.common.VehicleFormValidator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -50,6 +51,7 @@ class RegisterCarViewModel(
     val uiState: StateFlow<RegisterCarUiState> = _uiState.asStateFlow()
 
     fun onLicensePlateChange(value: String) {
+        if (value.length > 15) return
         _uiState.value = _uiState.value.copy(licensePlate = _uiState.value.licensePlate.copy(value = value, error = null))
     }
 
@@ -117,18 +119,85 @@ class RegisterCarViewModel(
         val currentState = _uiState.value
 
         val validatedState = currentState.copy(
-            licensePlate = currentState.licensePlate.validateRequired(application.getString(R.string.license_plate_is_required)),
-            brand = currentState.brand.validateRequired(application.getString(R.string.brand_is_required)),
-            model = currentState.model.validateRequired(application.getString(R.string.model_is_required)),
-            year = currentState.year.validateRequired(application.getString(R.string.year_is_required)),
-            color = currentState.color.validateRequired(application.getString(R.string.color_is_required)),
-            seats = currentState.seats.validateRequired(application.getString(R.string.seats_is_required)),
-            costPerDay = currentState.costPerDay.validateRequired(application.getString(R.string.cost_per_day_is_required)),
-            odometerKm = currentState.odometerKm.validateRequired(application.getString(R.string.odometer_is_required)),
-            motValidTill = currentState.motValidTill.validateRequired(application.getString(R.string.mot_valid_till_is_required)),
-            vin = currentState.vin.validateRequired(application.getString(R.string.vin_is_required)),
-            zeroToHundred = currentState.zeroToHundred.validateRequired(application.getString(R.string.zero_to_hundred_is_required)),
-            address = currentState.address.validateRequired(application.getString(R.string.address_is_required))
+            licensePlate = currentState.licensePlate.copy(
+                error = VehicleFormValidator.validateLicensePlate(
+                    currentState.licensePlate.value,
+                    application.getString(R.string.license_plate_is_required),
+                    application.getString(R.string.invalid_license_plate_format)
+                )
+            ),
+            brand = currentState.brand.copy(
+                error = VehicleFormValidator.validateRequired(
+                    currentState.brand.value,
+                    application.getString(R.string.brand_is_required)
+                )
+            ),
+            model = currentState.model.copy(
+                error = VehicleFormValidator.validateRequired(
+                    currentState.model.value,
+                    application.getString(R.string.model_is_required)
+                )
+            ),
+            year = currentState.year.copy(
+                error = VehicleFormValidator.validateYear(
+                    currentState.year.value,
+                    application.getString(R.string.year_is_required),
+                    application.getString(R.string.invalid_year)
+                )
+            ),
+            color = currentState.color.copy(
+                error = VehicleFormValidator.validateRequired(
+                    currentState.color.value,
+                    application.getString(R.string.color_is_required)
+                )
+            ),
+            seats = currentState.seats.copy(
+                error = VehicleFormValidator.validateSeats(
+                    currentState.seats.value,
+                    application.getString(R.string.seats_is_required),
+                    application.getString(R.string.invalid_seats)
+                )
+            ),
+            costPerDay = currentState.costPerDay.copy(
+                error = VehicleFormValidator.validatePositiveNumber(
+                    currentState.costPerDay.value,
+                    application.getString(R.string.cost_per_day_is_required),
+                    application.getString(R.string.invalid_cost_per_day)
+                )
+            ),
+            odometerKm = currentState.odometerKm.copy(
+                error = VehicleFormValidator.validatePositiveNumber(
+                    currentState.odometerKm.value,
+                    application.getString(R.string.odometer_is_required),
+                    application.getString(R.string.invalid_odometer)
+                )
+            ),
+            motValidTill = currentState.motValidTill.copy(
+                error = VehicleFormValidator.validateRequired(
+                    currentState.motValidTill.value,
+                    application.getString(R.string.mot_valid_till_is_required)
+                )
+            ),
+            vin = currentState.vin.copy(
+                error = VehicleFormValidator.validateVin(
+                    currentState.vin.value,
+                    application.getString(R.string.vin_is_required),
+                    application.getString(R.string.invalid_vin_format)
+                )
+            ),
+            zeroToHundred = currentState.zeroToHundred.copy(
+                error = VehicleFormValidator.validatePositiveNumber(
+                    currentState.zeroToHundred.value,
+                    application.getString(R.string.zero_to_hundred_is_required),
+                    application.getString(R.string.invalid_zero_to_hundred)
+                )
+            ),
+            address = currentState.address.copy(
+                error = VehicleFormValidator.validateRequired(
+                    currentState.address.value,
+                    application.getString(R.string.address_is_required)
+                )
+            )
         )
 
         _uiState.value = validatedState
