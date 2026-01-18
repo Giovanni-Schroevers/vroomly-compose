@@ -10,5 +10,9 @@ query GetVehiclesByOwnerId($ownerId: Int!) {
         location {
             address
         }
+        images {
+            url
+            number
+        }
     }
 }

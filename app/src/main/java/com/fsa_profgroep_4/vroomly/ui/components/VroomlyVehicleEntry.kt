@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -46,8 +47,8 @@ fun VehicleListItem(
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = shape,
-        color = Color(0xFF0B0F14),
-        border = BorderStroke(1.dp, Color(0xFF1C2430)),
+        color = Color(0xFFF3F3F3),
+        border = BorderStroke(1.dp, Color(0xFFE0E0E0)),
         tonalElevation = 0.dp,
         shadowElevation = 0.dp,
         onClick = { onClick?.invoke() },
@@ -62,7 +63,9 @@ fun VehicleListItem(
             AsyncImage(
                 model = if (data.imageUrl == "error") null else data.imageUrl,
                 contentDescription = data.title,
-                fallback = painterResource(R.drawable.logo),
+                fallback = painterResource(R.drawable.vroomly_logo),
+                placeholder = painterResource(R.drawable.vroomly_logo),
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(74.dp)
                     .clip(
@@ -84,21 +87,21 @@ fun VehicleListItem(
                 Text(
                     text = data.title,
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color(0xFFE9EEF5),
+                    color = Color(0xFF1A1A1A),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = data.location,
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color(0xFFB6C0CC),
+                    color = Color(0xFF666666),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = data.owner,
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color(0xFFB6C0CC),
+                    color = Color(0xFF666666),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -125,7 +128,7 @@ fun VehicleListItem(
             Text(
                 text = formatEuroNl(data.costPerDay),
                 style = MaterialTheme.typography.titleMedium,
-                color = Color(0xFFE9EEF5),
+                color = Color(0xFF1A1A1A),
                 maxLines = 1,
                 overflow = TextOverflow.Clip
             )

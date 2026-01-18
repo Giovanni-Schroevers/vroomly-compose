@@ -1,0 +1,10 @@
+mutation RemoveImageFromVehicle($vehicleId: Int!, $imageId: Int!) {
+    removeImageFromVehicle(vehicleId: $vehicleId, imageId: $imageId) {
+        id
+        images {
+            id
+            number
+            url
+        }
+    }
+}

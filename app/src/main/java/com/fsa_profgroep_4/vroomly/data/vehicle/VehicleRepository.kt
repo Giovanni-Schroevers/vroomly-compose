@@ -131,13 +131,19 @@ interface VehicleRepository {
 
 private const val TAG = "VehicleRepository"
 
+private data class VehicleCacheEntry(
+    val imageUrl: String,
+    val model: String,
+    val location: String
+)
+
 class VehicleRepositoryImpl(
     private val apolloClient: ApolloClient,
     private val userDao: UserDao,
     private val imageStorageService: ImageStorageService
 ) : VehicleRepository {
 
-    private val imageUrlCache = mutableMapOf<Int, String>()
+    private val vehicleCache = mutableMapOf<Int, VehicleCacheEntry>()
     private val detailsSemaphore = Semaphore(4)
 
     override suspend fun searchVehicles(
@@ -182,12 +188,12 @@ class VehicleRepositoryImpl(
                         val id = vehicle.id ?: return@async null
 
                         // Always use cache if present even when it's "error"
-                        imageUrlCache[id]?.let { cached ->
+                        vehicleCache[id]?.let { cached ->
                             return@async VehicleCardUi(
                                 vehicleId = id,
-                                imageUrl = cached,
-                                title = vehicle.brand,
-                                location = "-",
+                                imageUrl = cached.imageUrl,
+                                title = "${vehicle.brand} ${cached.model}".trim(),
+                                location = cached.location,
                                 owner = "Owner #${vehicle.ownerId}",
                                 tagText = vehicle.engineType.name,
                                 badgeText = vehicle.reviewStars.toString(),
@@ -197,11 +203,14 @@ class VehicleRepositoryImpl(
 
                         // If not in prefetch set, don't call details yet (fast first paint)
                         if (id !in prefetchIds) {
-                            val placeholder = "error"
-                            imageUrlCache[id] = placeholder // cache miss as well
+                            vehicleCache[id] = VehicleCacheEntry(
+                                imageUrl = "error",
+                                model = "",
+                                location = "-"
+                            )
                             return@async VehicleCardUi(
                                 vehicleId = id,
-                                imageUrl = placeholder,
+                                imageUrl = "error",
                                 title = vehicle.brand,
                                 location = "-",
                                 owner = "Owner #${vehicle.ownerId}",
@@ -228,15 +237,21 @@ class VehicleRepositoryImpl(
                             ?.minByOrNull { it.number }
                             ?.url
                             ?: "error"
+                        val model = details?.model ?: ""
+                        val location = details?.location?.address ?: "-"
 
                         // Cache even when it's "error" to avoid re-fetching
-                        imageUrlCache[id] = imageUrl
+                        vehicleCache[id] = VehicleCacheEntry(
+                            imageUrl = imageUrl,
+                            model = model,
+                            location = location
+                        )
 
                         VehicleCardUi(
                             vehicleId = id,
                             imageUrl = imageUrl,
-                            title = vehicle.brand,
-                            location = details?.location?.address ?: "-",
+                            title = "${vehicle.brand} $model".trim(),
+                            location = location,
                             owner = "Owner #${vehicle.ownerId}",
                             tagText = vehicle.engineType.name,
                             badgeText = vehicle.reviewStars.toString(),
@@ -249,7 +264,7 @@ class VehicleRepositoryImpl(
             val totalMs = SystemClock.elapsedRealtime() - totalT0
             Log.d(
                 TAG,
-                "searchVehicles DONE items=${result.size} total=${totalMs}ms cacheSize=${imageUrlCache.size}"
+                "searchVehicles DONE items=${result.size} total=${totalMs}ms cacheSize=${vehicleCache.size}"
             )
 
             result
@@ -273,9 +288,14 @@ class VehicleRepositoryImpl(
 
             vehicles.mapNotNull { vehicle ->
                 val id = vehicle.id ?: return@mapNotNull null
+                val imageUrl = vehicle.images
+                    .filter { it.url.isNotBlank() }
+                    .minByOrNull { it.number }
+                    ?.url
+                    ?: "error"
                 VehicleCardUi(
                     vehicleId = id,
-                    imageUrl = "error",
+                    imageUrl = imageUrl,
                     title = "${vehicle.brand} ${vehicle.model}",
                     location = vehicle.location?.address ?: "-",
                     owner = "Owner #${vehicle.ownerId}",
