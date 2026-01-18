@@ -28,7 +28,7 @@ val authModule = module {
         viewModel { StartViewModel(get()) }
         viewModel { LoginViewModel(get(), get(), androidApplication()) }
         viewModel { RegisterViewModel(get(), get(), androidApplication()) }
-        viewModel { HomeViewModel(get()) }
+        viewModel { HomeViewModel(get(),get(), get(), get(), androidApplication()) }
         viewModel { RegisterCarViewModel(get(), get(), androidApplication()) }
 
         navigation<Start> { StartScreen(viewModel = get()) }
