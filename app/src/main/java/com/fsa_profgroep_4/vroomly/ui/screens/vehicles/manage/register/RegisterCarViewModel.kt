@@ -1,10 +1,10 @@
 package com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.register
 
 import android.app.Application
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-//import com.example.rocketreserver.type.EngineType
-//import com.example.rocketreserver.type.VehicleCategory
 import com.fsa_profgroep_4.vroomly.R
 import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
+private const val TAG = "RegisterCarViewModel"
 
 data class RegisterCarUiState(
     val licensePlate: FormField = FormField(),
@@ -33,7 +35,9 @@ data class RegisterCarUiState(
     val latitude: FormField = FormField(value = "52.3676"),
     val longitude: FormField = FormField(value = "4.9041"),
     val isLoading: Boolean = false,
-    val generalError: String? = null
+    val generalError: String? = null,
+    val selectedImageUris: List<Uri> = emptyList(),
+    val isUploadingImage: Boolean = false
 ) {
     fun hasErrors() = listOf(
         licensePlate, brand, model, year, color, seats,
@@ -105,6 +109,12 @@ class RegisterCarViewModel(
 
     fun onAddressChange(value: String) {
         _uiState.value = _uiState.value.copy(address = _uiState.value.address.copy(value = value, error = null))
+    }
+
+    fun onImageSelected(uri: Uri) {
+        _uiState.value = _uiState.value.copy(
+            selectedImageUris = _uiState.value.selectedImageUris + uri
+        )
     }
 
     fun onLatitudeChange(value: String) {
@@ -225,10 +235,15 @@ class RegisterCarViewModel(
                 longitude = validatedState.longitude.value.toDoubleOrNull() ?: 4.9041
             )
 
-
-            result.onSuccess {
-                _uiState.value = _uiState.value.copy(isLoading = false)
-                navigator.goBack()
+            result.onSuccess { createdVehicle ->
+                val vehicleId = createdVehicle.id
+                if (vehicleId != null && _uiState.value.selectedImageUris.isNotEmpty()) {
+                    _uiState.value = _uiState.value.copy(isUploadingImage = true)
+                    uploadImages(vehicleId)
+                } else {
+                    _uiState.value = _uiState.value.copy(isLoading = false)
+                    navigator.goBack()
+                }
             }.onFailure { error ->
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
@@ -236,6 +251,53 @@ class RegisterCarViewModel(
                         ?: application.getString(R.string.vehicle_registration_failed)
                 )
             }
+        }
+    }
+
+    private suspend fun uploadImages(vehicleId: Int) {
+        Log.d(TAG, "uploadImages called for vehicleId: $vehicleId, imageCount: ${_uiState.value.selectedImageUris.size}")
+        val contentResolver = application.contentResolver
+        var hasError = false
+
+        _uiState.value.selectedImageUris.forEachIndexed { index, uri ->
+            Log.d(TAG, "Processing image $index: $uri")
+            try {
+                val inputStream = contentResolver.openInputStream(uri)
+                val imageBytes = inputStream?.readBytes()
+                inputStream?.close()
+
+                Log.d(TAG, "Image $index bytes read: ${imageBytes?.size ?: 0}")
+
+                if (imageBytes != null && imageBytes.isNotEmpty()) {
+                    val result = vehicleRepository.uploadAndAddImageToVehicle(
+                        vehicleId = vehicleId,
+                        imageBytes = imageBytes,
+                        imageNumber = index
+                    )
+                    if (result.isFailure) {
+                        Log.e(TAG, "Failed to upload image $index", result.exceptionOrNull())
+                        hasError = true
+                    } else {
+                        Log.d(TAG, "Successfully uploaded image $index: ${result.getOrNull()}")
+                    }
+                } else {
+                    Log.e(TAG, "Image $index has no bytes")
+                    hasError = true
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Exception uploading image $index", e)
+                hasError = true
+            }
+        }
+
+        _uiState.value = _uiState.value.copy(
+            isLoading = false,
+            isUploadingImage = false,
+            generalError = if (hasError) application.getString(R.string.image_upload_failed) else null
+        )
+
+        if (!hasError) {
+            navigator.goBack()
         }
     }
 

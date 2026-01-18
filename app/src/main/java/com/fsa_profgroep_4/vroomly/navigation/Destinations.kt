@@ -49,4 +49,7 @@ data class ReviewReservation(val reservationId: Int) : NavKey
 object Drive : NavKey
 
 @Serializable
+data class ReservationMap(val reservationId: Int) : NavKey
+
+@Serializable
 data class ViewTCO(val vehicleId: Int) : NavKey

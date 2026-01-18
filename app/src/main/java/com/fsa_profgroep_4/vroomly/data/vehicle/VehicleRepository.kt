@@ -4,6 +4,7 @@ import android.os.SystemClock
 import android.util.Log
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
+import com.example.rocketreserver.AddImageToVehicleQuery
 import com.example.rocketreserver.AvailableVehiclesQuery
 import com.example.rocketreserver.CreateVehicleQuery
 import com.example.rocketreserver.DeleteVehicleMutation
@@ -13,6 +14,7 @@ import com.example.rocketreserver.GetReservationsByVehicleIdQuery
 import com.example.rocketreserver.GetVehicleByIdQuery
 import com.example.rocketreserver.GetVehicleTcoDataQuery
 import com.example.rocketreserver.GetVehiclesByOwnerIdQuery
+import com.fsa_profgroep_4.vroomly.data.storage.ImageStorageService
 import com.example.rocketreserver.SaveVehicleTcoDataMutation
 import com.example.rocketreserver.UpdateVehicleTcoDataMutation
 import com.example.rocketreserver.VehicleTcoByIdQuery
@@ -91,6 +93,12 @@ interface VehicleRepository {
         longitude: Double?
     ): Result<UpdateVehicleMutation.UpdateVehicle>
 
+    suspend fun uploadAndAddImageToVehicle(
+        vehicleId: Int,
+        imageBytes: ByteArray,
+        imageNumber: Int?
+    ): Result<String>
+
     suspend fun getVehicleTCOData(
         vehicleId: Int
     ): Result<GetVehicleTcoDataQuery.GetVehicleTcoData>
@@ -120,7 +128,8 @@ private const val TAG = "VehicleRepository"
 
 class VehicleRepositoryImpl(
     private val apolloClient: ApolloClient,
-    private val userDao: UserDao
+    private val userDao: UserDao,
+    private val imageStorageService: ImageStorageService
 ) : VehicleRepository {
 
     private val imageUrlCache = mutableMapOf<Int, String>()
@@ -462,6 +471,46 @@ class VehicleRepositoryImpl(
         }.also { result ->
             result.onFailure { e ->
                 Log.e(TAG, "updateVehicle() failed with exception", e)
+            }
+        }
+    }
+
+    override suspend fun uploadAndAddImageToVehicle(
+        vehicleId: Int,
+        imageBytes: ByteArray,
+        imageNumber: Int?
+    ): Result<String> {
+        Log.d(TAG, "uploadAndAddImageToVehicle: vehicleId=$vehicleId, bytes=${imageBytes.size}, number=$imageNumber")
+        return runCatching {
+            // Upload image to Supabase Storage
+            Log.d(TAG, "Starting Supabase upload...")
+            val uploadResult = imageStorageService.uploadVehicleImage(vehicleId, imageBytes)
+            val imageUrl = uploadResult.getOrThrow()
+            Log.d(TAG, "Supabase upload successful: $imageUrl")
+
+            // Add image URL to vehicle via GraphQL
+            Log.d(TAG, "Adding image to vehicle via GraphQL...")
+            val response = withContext(Dispatchers.IO) {
+                apolloClient.query(
+                    AddImageToVehicleQuery(
+                        vehicleId = vehicleId,
+                        imageUrl = imageUrl,
+                        number = Optional.presentIfNotNull(imageNumber)
+                    )
+                ).execute()
+            }
+
+            if (response.hasErrors()) {
+                val errorMsg = response.errors?.first()?.message ?: "Unknown error adding image"
+                Log.e(TAG, "GraphQL error: $errorMsg")
+                throw Exception(errorMsg)
+            }
+
+            Log.d(TAG, "Image added to vehicle successfully")
+            imageUrl
+        }.also { result ->
+            result.onFailure { e ->
+                Log.e(TAG, "uploadAndAddImageToVehicle() failed with exception", e)
             }
         }
     }

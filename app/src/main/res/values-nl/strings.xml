@@ -88,6 +88,11 @@
     <string name="select_engine_type">Selecteer motortype</string>
     <string name="no_images">Geen afbeeldingen</string>
     <string name="add_image">Afbeelding toevoegen</string>
+    <string name="take_photo">Foto maken</string>
+    <string name="choose_from_gallery">Kies uit galerij</string>
+    <string name="uploading_image">Afbeelding uploaden…</string>
+    <string name="image_upload_failed">Afbeelding uploaden mislukt</string>
+    <string name="camera_permission_required">Cameratoestemming is vereist om foto\'s te maken</string>
     <string name="manage_my_cars">Beheer mijn auto\'s</string>
     <string name="no_cars_registered">Nog geen auto\'s geregistreerd</string>
     <string name="reservations">Reserveringen</string>
