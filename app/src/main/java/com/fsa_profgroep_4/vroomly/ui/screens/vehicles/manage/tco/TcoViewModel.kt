@@ -21,6 +21,7 @@ data class TCOUiState(
     val taxAndRegistrationPerYear: FormField = FormField(),
     val yearsOwned: FormField = FormField(),
     val tCOResult: Double? = null,
+    val costPerKm: Double? = null,
     val isLoading: Boolean = true,
     val generalError: String? = null
 )
@@ -28,7 +29,7 @@ data class TCOUiState(
 class TcoViewModel(
     private val navigator: Navigator,
     private val vehicleRepository: VehicleRepository,
-    public val vehicleId: Int
+    private val vehicleId: Int
 ): ViewModel() {
     private val _uiState = MutableStateFlow(TCOUiState())
     val uiState: StateFlow<TCOUiState> = _uiState.asStateFlow()
@@ -88,7 +89,13 @@ class TcoViewModel(
     private fun getTCOResult() {
         viewModelScope.launch {
             vehicleRepository.vehicleTcoById(vehicleId = vehicleId).onSuccess { tcoResult ->
-                _uiState.value = _uiState.value.copy(tCOResult = tcoResult.tcoValue, isLoading = false)
+                vehicleRepository.vehicleConsumptionById(vehicleId = vehicleId).onSuccess { vehicleConsumption ->
+                    _uiState.value = _uiState.value.copy(
+                        tCOResult = tcoResult.tcoValue,
+                        costPerKm = vehicleConsumption.costPerKm,
+                        isLoading = false
+                    )
+                }
             }
         }
     }

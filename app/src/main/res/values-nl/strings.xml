@@ -121,6 +121,7 @@
     <string name="you_can_only_track_a_drive_when_you_have_an_active_reservation_for_today">Je kunt alleen een rit volgen als je een actieve reservering voor vandaag hebt.</string>
     <string name="no_active_reservation">Geen actieve reservering</string>
     <string name="go_to_home">Ga naar Home</string>
+    <string name="drive_saved">Rit opgeslagen!</string>
     <string name="view_tco">Bekijk TCO</string>
     <string name="tco_data">TCO gegevens</string>
     <string name="tco_is">TCO is:</string>
@@ -135,4 +136,5 @@
     <string name="tax_and_registration_per_year">Belasting en registratie per jaar</string>
     <string name="years_owned">Aantal jaar in bezit</string>
     <string name="save_tco_data">TCO gegevens opslaan</string>
+    <string name="cost_per_km">Kosten per km:</string>
 </resources>

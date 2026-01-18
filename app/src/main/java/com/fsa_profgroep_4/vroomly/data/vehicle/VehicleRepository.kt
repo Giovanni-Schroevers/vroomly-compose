@@ -17,6 +17,7 @@ import com.example.rocketreserver.GetVehiclesByOwnerIdQuery
 import com.fsa_profgroep_4.vroomly.data.storage.ImageStorageService
 import com.example.rocketreserver.SaveVehicleTcoDataMutation
 import com.example.rocketreserver.UpdateVehicleTcoDataMutation
+import com.example.rocketreserver.VehicleConsumptionByIdQuery
 import com.example.rocketreserver.VehicleTcoByIdQuery
 import com.example.rocketreserver.type.EngineType
 import com.example.rocketreserver.type.VehicleCategory
@@ -122,6 +123,10 @@ interface VehicleRepository {
     suspend fun vehicleTcoById(
         vehicleId: Int
     ): Result<VehicleTcoByIdQuery.VehicleTcoById>
+
+    suspend fun vehicleConsumptionById(
+        vehicleId: Int
+    ): Result<VehicleConsumptionByIdQuery.VehicleConsumptionById>
 }
 
 private const val TAG = "VehicleRepository"
@@ -604,6 +609,22 @@ class VehicleRepositoryImpl(
             response.data?.vehicleTcoById ?: throw Exception("TCO data not found")
         }.also { r ->
             r.onFailure { e -> Log.e(TAG, "vehicleTcoById failed", e) }
+        }
+    }
+
+    override suspend fun vehicleConsumptionById(vehicleId: Int): Result<VehicleConsumptionByIdQuery.VehicleConsumptionById> {
+        return runCatching {
+            val response = withContext(Dispatchers.IO) {
+                apolloClient.query(VehicleConsumptionByIdQuery(vehicleId = vehicleId)).execute()
+            }
+
+            if (response.hasErrors()) {
+                throw Exception(response.errors?.firstOrNull()?.message ?: "Unknown error")
+            }
+
+            response.data?.vehicleConsumptionById ?: throw Exception("TCO data not found")
+        }.also { r ->
+            r.onFailure { e -> Log.e(TAG, "vehicleConsumptionById failed", e) }
         }
     }
 }

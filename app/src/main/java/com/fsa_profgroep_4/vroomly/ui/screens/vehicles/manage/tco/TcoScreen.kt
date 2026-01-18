@@ -66,6 +66,21 @@ fun TcoScreen(viewModel: TcoViewModel) {
                     Text(tcoText)
                 }
 
+                Row(
+                    modifier = Modifier
+                        .padding(bottom = MaterialTheme.spacing.medium)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(stringResource(R.string.cost_per_km))
+                    val costPerDay = when {
+                        uiState.isLoading -> stringResource(R.string.loading)
+                        uiState.tCOResult != null -> uiState.costPerKm.toString()
+                        else -> stringResource(R.string.not_yet_available)
+                    }
+                    Text(costPerDay)
+                }
+
                 VroomlyTextField(
                     value = uiState.acquisitionCost.value,
                     errorText = uiState.acquisitionCost.error,
