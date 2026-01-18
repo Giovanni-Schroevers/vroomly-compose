@@ -6,6 +6,7 @@ import com.example.rocketreserver.GetVehicleByIdQuery
 import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
 import com.fsa_profgroep_4.vroomly.navigation.EditCar
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
+import com.fsa_profgroep_4.vroomly.navigation.ViewTCO
 import com.fsa_profgroep_4.vroomly.ui.base.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -76,6 +77,10 @@ class OwnerCarDetailViewModel(
 
     fun onEditCarClicked() {
         navigator.goTo(EditCar(vehicleId))
+    }
+
+    fun onViewTCO() {
+        navigator.goTo(ViewTCO(vehicleId))
     }
 
     fun showDeleteConfirmation() {

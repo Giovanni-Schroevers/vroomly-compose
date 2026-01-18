@@ -122,4 +122,19 @@
     <string name="no_active_reservation">Geen actieve reservering</string>
     <string name="go_to_home">Ga naar Home</string>
     <string name="drive_saved">Rit opgeslagen!</string>
+    <string name="view_tco">Bekijk TCO</string>
+    <string name="tco_data">TCO gegevens</string>
+    <string name="tco_is">TCO is:</string>
+    <string name="loading">laden...</string>
+    <string name="not_yet_available">Nog niet beschikbaar</string>
+    <string name="acquisition_cost">Aanschafprijs</string>
+    <string name="current_market_value">Huidige marktwaarde</string>
+    <string name="fuel_consumption_per_100_km">Brandstofverbruik per 100 km</string>
+    <string name="fuel_price_per_liter">Brandstofprijs per liter</string>
+    <string name="insurance_costs_per_year">Verzekeringskosten per jaar</string>
+    <string name="maintenance_costs">Onderhoudskosten</string>
+    <string name="tax_and_registration_per_year">Belasting en registratie per jaar</string>
+    <string name="years_owned">Aantal jaar in bezit</string>
+    <string name="save_tco_data">TCO gegevens opslaan</string>
+    <string name="cost_per_km">Kosten per km:</string>
 </resources>

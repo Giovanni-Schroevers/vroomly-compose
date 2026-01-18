@@ -1,9 +1,16 @@
 package com.fsa_profgroep_4.vroomly.ui.screens.reservation.manage
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +23,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,20 +35,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import androidx.core.content.ContextCompat
 import com.example.rocketreserver.type.ReservationStatus
 import com.fsa_profgroep_4.vroomly.R
 import com.fsa_profgroep_4.vroomly.ui.components.DateRow
 import com.fsa_profgroep_4.vroomly.ui.components.LicensePlateCard
 import com.fsa_profgroep_4.vroomly.ui.components.VroomlyBackButton
+import com.fsa_profgroep_4.vroomly.ui.screens.drive.components.DriveRouteMap
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
 import org.koin.androidx.compose.koinViewModel
+import java.text.NumberFormat
+import java.util.Locale
 
 @Composable
 fun ReviewReservationScreen(
@@ -127,6 +149,50 @@ fun ReviewReservationScreen(
                 onEndClick = {  }
             )
 
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text("Cost per day:", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+                    Text("Total cost:", style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Card(
+                        shape = RoundedCornerShape(16.dp),
+                        modifier = Modifier.height(44.dp).weight(1f),
+                        border = BorderStroke(1.dp, Color(0xFFCBD5E1)),
+                        colors = CardDefaults.cardColors(containerColor = Color.White)
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp),
+                            contentAlignment = Alignment.CenterStart
+                        ) { Text(formatEuroNl(state.costPerDay)) }
+                    }
+
+                    Card(
+                        shape = RoundedCornerShape(16.dp),
+                        modifier = Modifier.height(44.dp).weight(1f),
+                        border = BorderStroke(1.dp, Color(0xFFCBD5E1)),
+                        colors = CardDefaults.cardColors(containerColor = Color.White)
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp),
+                            contentAlignment = Alignment.CenterStart
+                        ) { Text(formatEuroNl(state.totalCost)) }
+                    }
+                }
+            }
+
+            if (state.status == ReservationStatus.CONFIRMED
+                || state.status == ReservationStatus.ACTIVE){
+
+                Column(Modifier.padding(16.dp)) {
+                    Button(onClick = {
+                        viewModel.onOpenMap(reservationId)
+                    }) { Text("Show car on map") }
+
+                    Spacer(Modifier.height(12.dp))
+                }
+            }
+
             Spacer(Modifier.weight(1f))
 
             if (state.status == ReservationStatus.PENDING) {
@@ -159,4 +225,10 @@ fun ReviewReservationScreen(
             Spacer(Modifier.height(6.dp))
         }
     }
+}
+
+private fun formatEuroNl(value: Double?): String {
+    if (value == null) return "-"
+    val nf = NumberFormat.getCurrencyInstance(Locale("nl", "NL"))
+    return nf.format(value)
 }

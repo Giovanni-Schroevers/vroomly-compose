@@ -1,0 +1,5 @@
+query VehicleConsumptionById($vehicleId: Int!) {
+    vehicleConsumptionById(vehicleId: $vehicleId) {
+        costPerKm
+    }
+}

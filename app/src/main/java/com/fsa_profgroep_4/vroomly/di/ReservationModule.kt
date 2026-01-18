@@ -1,8 +1,10 @@
 package com.fsa_profgroep_4.vroomly.di
 
 import com.fsa_profgroep_4.vroomly.navigation.CreateReservation
+import com.fsa_profgroep_4.vroomly.navigation.ReservationMap
 import com.fsa_profgroep_4.vroomly.navigation.ReservationsOverview
 import com.fsa_profgroep_4.vroomly.navigation.ReviewReservation
+import com.fsa_profgroep_4.vroomly.ui.screens.reservation.manage.ReservationMapScreen
 import com.fsa_profgroep_4.vroomly.ui.screens.reservation.manage.ReviewReservationScreen
 import com.fsa_profgroep_4.vroomly.ui.screens.reservation.manage.ReviewReservationViewModel
 import com.fsa_profgroep_4.vroomly.ui.screens.reservation.overview.ReservationOverviewScreen
@@ -31,6 +33,12 @@ val reservationModule = module {
         }
         navigation<ReviewReservation> { key ->
             ReviewReservationScreen(
+                reservationId = key.reservationId,
+                viewModel = get()
+            )
+        }
+        navigation<ReservationMap> { key ->
+            ReservationMapScreen(
                 reservationId = key.reservationId,
                 viewModel = get()
             )

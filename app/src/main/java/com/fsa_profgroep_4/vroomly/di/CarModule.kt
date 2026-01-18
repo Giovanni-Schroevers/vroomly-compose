@@ -4,6 +4,7 @@ import com.fsa_profgroep_4.vroomly.navigation.EditCar
 import com.fsa_profgroep_4.vroomly.navigation.OwnerCarDetail
 import com.fsa_profgroep_4.vroomly.navigation.OwnerCarOverview
 import com.fsa_profgroep_4.vroomly.navigation.VehiclesOverview
+import com.fsa_profgroep_4.vroomly.navigation.ViewTCO
 import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.edit.EditCarScreen
 import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.edit.EditCarViewModel
 import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.Overview.VehiclesOverviewScreen
@@ -12,6 +13,8 @@ import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.OwnerDetail.OwnerC
 import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.OwnerDetail.OwnerCarDetailViewModel
 import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.OwnerOverview.OwnerCarOverviewScreen
 import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.OwnerOverview.OwnerCarOverviewViewModel
+import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.tco.TcoScreen
+import com.fsa_profgroep_4.vroomly.ui.screens.vehicles.manage.tco.TcoViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.scope.dsl.activityRetainedScope
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -27,6 +30,7 @@ val carModule = module {
         viewModel { OwnerCarOverviewViewModel(get(), get(), get()) }
         viewModel { (vehicleId: Int) -> OwnerCarDetailViewModel(get(), get(), vehicleId) }
         viewModel { (vehicleId: Int) -> EditCarViewModel(get(), get(), androidApplication(), vehicleId) }
+        viewModel { (vehicleId: Int) -> TcoViewModel(get(), get(), vehicleId) }
 
         navigation<VehiclesOverview> { VehiclesOverviewScreen(viewModel = get()) }
         navigation<OwnerCarOverview> { OwnerCarOverviewScreen(viewModel = get()) }
@@ -35,6 +39,9 @@ val carModule = module {
         }
         navigation<EditCar> { destination ->
             EditCarScreen(viewModel = get { parametersOf(destination.vehicleId) })
+        }
+        navigation<ViewTCO> { destination ->
+            TcoScreen(viewModel = get { parametersOf(destination.vehicleId) })
         }
     }
 }

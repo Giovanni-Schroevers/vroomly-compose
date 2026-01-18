@@ -6,10 +6,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,8 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fsa_profgroep_4.vroomly.R
 import com.fsa_profgroep_4.vroomly.ui.components.VroomlyBackButton
-import com.fsa_profgroep_4.vroomly.ui.components.VroomlyButton
 import com.fsa_profgroep_4.vroomly.ui.components.VroomlyDatePickerField
+import com.fsa_profgroep_4.vroomly.ui.components.VroomlyFormButton
 import com.fsa_profgroep_4.vroomly.ui.components.VroomlyTextField
 import com.fsa_profgroep_4.vroomly.ui.theme.spacing
 
@@ -114,13 +112,11 @@ fun AccountEditScreen(
                 errorText = uiState.fieldErrors["dob"]
             )
 
-            VroomlyButton(
+            VroomlyFormButton(
                 text = stringResource(R.string.save_changes),
                 onClick = { viewModel.onSave() },
                 modifier = Modifier.fillMaxWidth(),
-                leadingIcon = if (uiState.isLoading) {
-                    { CircularProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary) }
-                } else null
+                isLoading = uiState.isLoading
             )
 
             Spacer(modifier = Modifier.height(32.dp))

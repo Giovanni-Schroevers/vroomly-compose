@@ -1,0 +1,5 @@
+mutation SaveVehicleTcoData($input: VehicleTcoDataInput!) {
+    saveVehicleTcoData(input: $input) {
+        vehicleId
+    }
+}

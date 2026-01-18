@@ -45,6 +45,7 @@ import coil.compose.AsyncImage
 import com.fsa_profgroep_4.vroomly.R
 import com.fsa_profgroep_4.vroomly.ui.components.VroomlyBackButton
 import com.fsa_profgroep_4.vroomly.ui.components.VroomlyBottomBar
+import com.fsa_profgroep_4.vroomly.ui.components.VroomlyButton
 import com.fsa_profgroep_4.vroomly.ui.theme.spacing
 
 @Composable
@@ -285,6 +286,18 @@ fun OwnerCarDetailScreen(
                         Text(
                             text = stringResource(R.string.edit_car)
                         )
+                    }
+
+                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+
+                    Button(
+                        onClick = { viewModel.onViewTCO() },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondary
+                        ),
+                    ) {
+                        Text(stringResource(R.string.view_tco))
                     }
 
                     Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
