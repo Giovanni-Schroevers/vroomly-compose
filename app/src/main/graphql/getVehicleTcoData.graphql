@@ -1,0 +1,12 @@
+query GetVehicleTcoData($vehicleId: Int!) {
+    getVehicleTcoData(vehicleId: $vehicleId) {
+        acquisitionCost
+        currentMarketValue
+        fuelConsumptionPer100Km
+        fuelPricePerLiter
+        insuranceCostsPerYear
+        maintenanceCosts
+        taxAndRegistrationPerYear
+        yearsOwned
+    }
+}

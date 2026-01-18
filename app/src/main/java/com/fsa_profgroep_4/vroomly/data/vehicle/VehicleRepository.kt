@@ -11,13 +11,18 @@ import com.example.rocketreserver.UpdateVehicleMutation
 import com.example.rocketreserver.type.VehicleUpdateInput
 import com.example.rocketreserver.GetReservationsByVehicleIdQuery
 import com.example.rocketreserver.GetVehicleByIdQuery
+import com.example.rocketreserver.GetVehicleTcoDataQuery
 import com.example.rocketreserver.GetVehiclesByOwnerIdQuery
+import com.example.rocketreserver.SaveVehicleTcoDataMutation
+import com.example.rocketreserver.UpdateVehicleTcoDataMutation
+import com.example.rocketreserver.VehicleTcoByIdQuery
 import com.example.rocketreserver.type.EngineType
 import com.example.rocketreserver.type.VehicleCategory
 import com.example.rocketreserver.type.VehicleFilterInput
 import com.example.rocketreserver.type.VehicleInput
 import com.example.rocketreserver.type.VehicleLocationInput
 import com.example.rocketreserver.type.VehicleStatus
+import com.example.rocketreserver.type.VehicleTcoDataInput
 import com.fsa_profgroep_4.vroomly.data.local.UserDao
 import com.fsa_profgroep_4.vroomly.ui.components.VehicleCardUi
 import kotlinx.coroutines.Dispatchers
@@ -85,6 +90,30 @@ interface VehicleRepository {
         latitude: Double?,
         longitude: Double?
     ): Result<UpdateVehicleMutation.UpdateVehicle>
+
+    suspend fun getVehicleTCOData(
+        vehicleId: Int
+    ): Result<GetVehicleTcoDataQuery.GetVehicleTcoData>
+
+    suspend fun saveVehicleTCOData(
+        vehicleId: Int
+    ): Result<SaveVehicleTcoDataMutation.SaveVehicleTcoData>
+
+    suspend fun updateVehicleTCOData(
+        vehicleId: Int,
+        acquisitionCost: Double?,
+        currentMarketValue: Double?,
+        fuelConsumptionPer100Km: Double?,
+        fuelPricePerLiter: Double?,
+        insuranceCostsPerYear: Double?,
+        maintenanceCosts: Double?,
+        taxAndRegistrationPerYear: Double?,
+        yearsOwned: Int?
+    ): Result<UpdateVehicleTcoDataMutation.UpdateVehicleTcoData>
+
+    suspend fun vehicleTcoById(
+        vehicleId: Int
+    ): Result<VehicleTcoByIdQuery.VehicleTcoById>
 }
 
 private const val TAG = "VehicleRepository"
@@ -434,6 +463,98 @@ class VehicleRepositoryImpl(
             result.onFailure { e ->
                 Log.e(TAG, "updateVehicle() failed with exception", e)
             }
+        }
+    }
+
+    override suspend fun getVehicleTCOData(vehicleId: Int): Result<GetVehicleTcoDataQuery.GetVehicleTcoData> {
+        return runCatching {
+            val response = withContext(Dispatchers.IO) {
+                apolloClient.query(GetVehicleTcoDataQuery(vehicleId = vehicleId)).execute()
+            }
+
+            if (response.hasErrors()) {
+                throw Exception(response.errors?.firstOrNull()?.message ?: "Unknown error")
+            }
+
+            response.data?.getVehicleTcoData ?: throw Exception("TCO data not found")
+        }.also { r ->
+            r.onFailure { e -> Log.e(TAG, "getVehicleTCOData failed", e) }
+        }
+    }
+
+    override suspend fun saveVehicleTCOData(vehicleId: Int): Result<SaveVehicleTcoDataMutation.SaveVehicleTcoData> {
+        return runCatching {
+            val response = withContext(Dispatchers.IO) {
+                apolloClient.mutation(
+                    SaveVehicleTcoDataMutation(
+                        input = VehicleTcoDataInput(
+                            vehicleId = vehicleId,
+                        )
+                    )
+                ).execute()
+            }
+
+            if (response.hasErrors()) {
+                throw Exception(response.errors?.firstOrNull()?.message ?: "Unknown error")
+            }
+
+            response.data?.saveVehicleTcoData ?: throw Exception("Failed to save TCO data")
+        }
+    }
+
+    override suspend fun updateVehicleTCOData(
+        vehicleId: Int,
+        acquisitionCost: Double?,
+        currentMarketValue: Double?,
+        fuelConsumptionPer100Km: Double?,
+        fuelPricePerLiter: Double?,
+        insuranceCostsPerYear: Double?,
+        maintenanceCosts: Double?,
+        taxAndRegistrationPerYear: Double?,
+        yearsOwned: Int?
+    ): Result<UpdateVehicleTcoDataMutation.UpdateVehicleTcoData> {
+        return runCatching {
+            val response = withContext(Dispatchers.IO) {
+                apolloClient.mutation(
+                    UpdateVehicleTcoDataMutation(
+                        input = VehicleTcoDataInput(
+                            vehicleId = vehicleId,
+                            acquisitionCost = Optional.presentIfNotNull(acquisitionCost),
+                            currentMarketValue = Optional.presentIfNotNull(currentMarketValue),
+                            fuelConsumptionPer100Km = Optional.presentIfNotNull(fuelConsumptionPer100Km),
+                            fuelPricePerLiter = Optional.presentIfNotNull(fuelPricePerLiter),
+                            insuranceCostsPerYear = Optional.presentIfNotNull(insuranceCostsPerYear),
+                            maintenanceCosts = Optional.presentIfNotNull(maintenanceCosts),
+                            taxAndRegistrationPerYear = Optional.presentIfNotNull(taxAndRegistrationPerYear),
+                            yearsOwned = Optional.presentIfNotNull(yearsOwned)
+                        ),
+                    )
+                ).execute()
+            }
+
+            if (response.hasErrors()) {
+                throw Exception(response.errors?.firstOrNull()?.message ?: "Unknown error")
+            }
+
+            response.data?.updateVehicleTcoData ?: throw Exception("Failed to save TCO data")
+        }.also { r ->
+            r.onFailure { e -> Log.e(TAG, "saveVehicleTCOData failed", e) }
+        }
+    }
+
+    override suspend fun vehicleTcoById(vehicleId: Int): Result<VehicleTcoByIdQuery.VehicleTcoById> {
+        return runCatching {
+            val response = withContext(Dispatchers.IO) {
+                apolloClient.query(VehicleTcoByIdQuery(vehicleId = vehicleId)).execute()
+            }
+
+            if (response.hasErrors()) {
+                throw Exception(response.errors?.firstOrNull()?.message ?: "Unknown error")
+            }
+
+            response.data?.vehicleTcoById ?: throw Exception("TCO data not found")
+        }.also { r ->
+            r.onFailure { e -> Log.e(TAG, "vehicleTcoById failed", e) }
         }
     }
 }

@@ -1,0 +1,12 @@
+mutation UpdateVehicleTcoData($input: VehicleTcoDataInput!) {
+    updateVehicleTcoData(input: $input) {
+        acquisitionCost
+        currentMarketValue
+        fuelConsumptionPer100Km
+        fuelPricePerLiter
+        insuranceCostsPerYear
+        maintenanceCosts
+        taxAndRegistrationPerYear
+        yearsOwned
+    }
+}

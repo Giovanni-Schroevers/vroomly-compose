@@ -119,4 +119,18 @@
     <string name="no_active_reservation">No Active Reservation</string>
     <string name="go_to_home">Go to Home</string>
     <string name="drive_saved">Drive Saved!</string>
+    <string name="view_tco">View TCO</string>
+    <string name="tco_data">TCO data</string>
+    <string name="tco_is">TCO is:</string>
+    <string name="loading">loading...</string>
+    <string name="not_yet_available">Not yet available</string>
+    <string name="acquisition_cost">Acquisition Cost</string>
+    <string name="current_market_value">Current Market Value</string>
+    <string name="fuel_consumption_per_100_km">Fuel consumption per 100 km</string>
+    <string name="fuel_price_per_liter">Fuel price per liter</string>
+    <string name="insurance_costs_per_year">Insurance costs per year</string>
+    <string name="maintenance_costs">Maintenance costs</string>
+    <string name="tax_and_registration_per_year">Tax and registration per year</string>
+    <string name="years_owned">Years owned</string>
+    <string name="save_tco_data">Save TCO data</string>
 </resources>

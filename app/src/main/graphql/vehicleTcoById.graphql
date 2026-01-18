@@ -1,0 +1,5 @@
+query VehicleTcoById($vehicleId: Int!) {
+    vehicleTcoById(vehicleId: $vehicleId) {
+        tcoValue
+    }
+}
