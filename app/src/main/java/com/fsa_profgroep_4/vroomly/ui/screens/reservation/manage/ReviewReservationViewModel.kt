@@ -8,7 +8,6 @@ import com.example.rocketreserver.type.ReservationStatus
 import com.example.rocketreserver.type.ReservationUpdateInput
 import com.fsa_profgroep_4.vroomly.data.reservation.ReservationRepository
 import com.fsa_profgroep_4.vroomly.data.vehicle.VehicleRepository
-import com.fsa_profgroep_4.vroomly.navigation.CreateReservation
 import com.fsa_profgroep_4.vroomly.navigation.Navigator
 import com.fsa_profgroep_4.vroomly.navigation.ReservationMap
 import com.fsa_profgroep_4.vroomly.ui.base.BaseViewModel
