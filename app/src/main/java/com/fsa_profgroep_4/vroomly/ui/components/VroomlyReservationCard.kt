@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -54,8 +55,8 @@ fun ReservationListItem(
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = shape,
-        color = Color(0xFFE9EEF5),
-        border = BorderStroke(1.dp, Color(0xFF1C2430)),
+        color = Color(0xFFF3F3F3),
+        border = BorderStroke(1.dp, Color(0xFFE0E0E0)),
         tonalElevation = 0.dp,
         shadowElevation = 0.dp,
         onClick = { onClick?.invoke() },
@@ -70,7 +71,9 @@ fun ReservationListItem(
             AsyncImage(
                 model = if (data.imageUrl == "error") null else data.imageUrl,
                 contentDescription = data.title,
-                fallback = painterResource(R.drawable.logo),
+                fallback = painterResource(R.drawable.vroomly_logo),
+                placeholder = painterResource(R.drawable.vroomly_logo),
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(74.dp)
                     .clip(
@@ -92,14 +95,14 @@ fun ReservationListItem(
                 Text(
                     text = data.title,
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color(0xFF0B0F14),
+                    color = Color(0xFF1A1A1A),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = data.location,
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color(0xFF0B0F14),
+                    color = Color(0xFF666666),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -111,14 +114,14 @@ fun ReservationListItem(
                 verticalArrangement = Arrangement.Center
             ) {
                 Box(
-                    modifier = modifier
+                    modifier = Modifier
                         .clip(CircleShape)
                         .background(Color(0xFF82D39F))
                         .padding(horizontal = 4.dp, vertical = 1.dp)
                 ) {
                     Text(
                         text = data.status,
-                        color = Color(0xFF0B0F14),
+                        color = Color(0xFF1A1A1A),
                         style = MaterialTheme.typography.labelSmall,
                         maxLines = 1
                     )
@@ -128,7 +131,7 @@ fun ReservationListItem(
             Text(
                 text = formatEuroNl(data.totalCost),
                 style = MaterialTheme.typography.titleMedium,
-                color = Color(0xFF030303),
+                color = Color(0xFF1A1A1A),
                 maxLines = 1,
                 overflow = TextOverflow.Clip
             )
