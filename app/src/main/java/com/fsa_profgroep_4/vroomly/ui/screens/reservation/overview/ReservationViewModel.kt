@@ -113,7 +113,11 @@ private fun ReservationEntity.toCardData(vehicle: VehicleCardUi): ReservationCar
 
 private fun GetVehicleByIdQuery.GetVehicleById.toVehicleCardUi() = VehicleCardUi(
     vehicleId = requireNotNull(id),
-    imageUrl = images.firstOrNull()?.url ?: "",
+    imageUrl = images
+        .filter { it.url.isNotBlank() }
+        .minByOrNull { it.number }
+        ?.url
+        ?: "error",
     title = "$brand $model",
     location = location.address,
     owner = "Owner #${ownerId}",
